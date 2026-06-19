@@ -88,7 +88,7 @@
         <th data-k="med">中位价 <span class="arr"></span></th>
         <th data-k="nsum">样本数 <span class="arr"></span></th>
         <th data-k="buy">收购上限(元/万) <span class="arr"></span></th>
-        <th data-k="profit">利润(韩元/万) <span class="arr"></span></th>
+        <th data-k="profit">利润(元/万) <span class="arr"></span></th>
       </tr>
     </thead>
     <tbody id="rows"></tbody>
@@ -102,7 +102,7 @@
     · 「全站最低」= 三平台中最便宜的那个,后面标注来自哪个平台(◆ 绿色为该行最便宜平台)。<br>
     · 「中位价」= 三平台各自最低价的中位数(反映该区普遍价位);「样本数」= 三平台合计抓到的报价条数,越多越可靠。<br>
     · 「收购上限(元/万)」= 全站最低卖价 ×(1 − 我的利润% − 平台费%)× 汇率,即你在中国收币的最高出价(人民币),低于此价才有利可图。<br>
-    · 「利润(韩元/万)」= 全站最低卖价 × 我的利润%,因你在韩国结算,利润以韩元显示。利润/平台费/汇率可在上方调整,表格实时重算。<br>
+    · 「全站最低」是你卖到韩国能拿到的<b>韩元卖价</b>;「收购上限(元/万)」是你在中国最多出多少<b>人民币</b>收;「利润(元/万)」= 全站最低 × 利润% × 汇率,即每1万个金币按目标利润能赚的<b>人民币</b>(按实时汇率)。利润/平台费/汇率可在上方调整,表格实时重算。<br>
     · 「DD373中文名」为中国 DD373 平台(韩服)对该区的繁体中文译名(希腊神名),方便在 DD373 收币时按名对照;注意 하이네 与 발센 在 DD373 同名「牛人彌諾陶洛斯」,收币时以韩文区名为准。<br>
     · 服务器名为韩服原名(专有名词),未翻译。本看板每 10 分钟自动刷新。
   </div>
@@ -140,7 +140,7 @@ function params(){
 }
 function compute(){
   const {pf,pl,rt}=params();
-  rows.forEach(r=>{r.buy=r.low*(1-(pf+pl)/100)*rt; r.profit=r.low*pf/100;});
+  rows.forEach(r=>{r.buy=r.low*(1-(pf+pl)/100)*rt; r.profit=r.low*pf/100*rt;});
 }
 
 function renderCards(){
@@ -188,7 +188,7 @@ function renderRows(){
     <td>${fmt(r.med)}</td>
     <td>${fmt(r.nsum)}</td>
     <td class="buy">¥${r.buy.toFixed(2)}</td>
-    <td class="profit">${fmt(Math.round(r.profit))} 원</td>
+    <td class="profit">¥${r.profit.toFixed(2)}</td>
   </tr>`).join("");
 }
 function renderMiss(){
