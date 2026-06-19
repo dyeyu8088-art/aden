@@ -1,163 +1,19 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>천당 클래식 · 아덴/아데나 3플랫폼 시세판</title>
-<style>
-:root{--bg:#0f1117;--card:#171a23;--line:#262b38;--txt:#e6e9ef;--mut:#8a93a6;--accent:#4ade80;--accent2:#60a5fa;--warn:#fbbf24;--low:#f87171;}
-*{box-sizing:border-box;}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;font-size:14px;}
-.wrap{max-width:1180px;margin:0 auto;padding:18px 14px 60px;}
-h1{font-size:20px;margin:0 0 4px;}
-.sub{color:var(--mut);font-size:12.5px;margin-bottom:14px;}
-.controls{display:flex;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
-.ctrl{display:flex;flex-direction:column;gap:4px;}
-.ctrl label{font-size:11.5px;color:var(--mut);}
-.ctrl input{width:110px;background:#0c0e14;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:7px 9px;font-size:14px;}
-.stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px;}
-.stat .k{font-size:11px;color:var(--mut);}
-.stat .v{font-size:16px;font-weight:600;margin-top:2px;}
-.tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;}
-table{border-collapse:collapse;width:100%;min-width:920px;font-variant-numeric:tabular-nums;}
-th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
-th{position:sticky;top:0;background:#1b1f2a;color:var(--mut);font-weight:600;font-size:12px;cursor:pointer;user-select:none;}
-th.l,td.l{text-align:left;}
-tr:hover td{background:#1c2030;}
-.srv{font-weight:600;}
-.best{color:var(--accent);font-weight:700;}
-.tag{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:6px;background:#22304a;color:var(--accent2);margin-left:6px;}
-.dim{color:var(--mut);}
-.buy{color:var(--warn);font-weight:600;}
-.profit{color:var(--accent);}
-.foot{margin-top:16px;color:var(--mut);font-size:11.5px;line-height:1.7;}
-.platrow{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px;font-size:12.5px;}
-.platrow b{color:var(--accent2);}
-</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>价格看板</title>
+<meta http-equiv="refresh" content="0; url=https://aden.bryan910809.workers.dev/">
+<style>body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0d1117;color:#e6edf3;
+display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}
+a{color:#58a6ff}</style>
 </head>
 <body>
-<div class="wrap">
-<h1>천당 클래식 · 아덴/아데나 3플랫폼 시세판</h1>
-<div class="sub" id="meta"></div>
-
-<div class="controls">
-  <div class="ctrl"><label>이익률 (%)</label><input id="profit" type="number" value="10" step="0.5"></div>
-  <div class="ctrl"><label>플랫폼 수수료 (%)</label><input id="fee" type="number" value="5" step="0.5"></div>
-  <div class="ctrl"><label>환율 (元/원)</label><input id="rate" type="number" value="0.0046" step="0.0001"></div>
+<div>
+<p>正在前往价格看板…</p>
+<p>若未自动跳转,请点击:<a href="https://aden.bryan910809.workers.dev/">进入看板</a></p>
+<p style="color:#8b949e;font-size:13px">需要激活码才能查看。请联系客服获取。</p>
 </div>
-
-<div class="platrow" id="platrow"></div>
-<div class="stats" id="stats"></div>
-
-<div class="tablewrap">
-<table>
-<thead><tr>
-<th class="l" data-k="idx">#</th>
-<th class="l" data-k="srv">서버</th>
-<th data-k="m">itemmania</th>
-<th data-k="i">itembay</th>
-<th data-k="b">barotem</th>
-<th data-k="low">전체 최저</th>
-<th data-k="med">중위가</th>
-<th data-k="n">표본수</th>
-<th data-k="buy">수매 상한(元/만)</th>
-<th data-k="pf">이익(원/만)</th>
-</tr></thead>
-<tbody id="tb"></tbody>
-</table>
-</div>
-
-<div class="foot">
-계산식 — 수매 상한 = 전체 최저 × (1 − 이익률% − 수수료%) × 환율 &nbsp;|&nbsp; 이익 = 전체 최저 × 이익률%<br>
-표시가는 「만(萬) 아덴당 원」 매도 호가 기준. 각 플랫폼 열은 해당 서버 최저 호가입니다. 전체 최저 옆 태그는 최저가 플랫폼.<br>
-※ 본 시세판은 가격 조회·비교용입니다. 어떤 매수/매도/주문도 수행하지 않습니다.
-</div>
-</div>
-
-<script>
-const SCRAPED = "2026. 06. 19. 오후 06:47";
-const RATE_DEFAULT = 0.0046;
-const MANIA = [["아인하사드",668,720,1150,35],["로엔그린",678,730,970,17],["아스테어",700,720,720,4],["데컨",790,880,2000,5],["캐스톨",800,800,940,4],["아툰",800,840,860,3],["듀크데필",810,810,880,3],["어레인",880,1110,1188,4],["발센",880,930,940,4],["마프르",880,880,880,1],["파아그리오",890,930,930,2],["케레니스",900,930,1050,4],["에바",940,940,1080,4],["세바스챤",960,990,2500,3],["크리스터",980,1050,1050,2],["사이하",980,980,980,1],["가드리아",990,990,990,1],["린델",1000,1000,1020,4],["하이네",1010,1010,1010,4],["군터",1040,1060,1070,3],["오웬",1050,1160,1170,4],["하딘",1050,1060,1060,2],["이실로테",1180,1250,1310,4],["켄라우헬",1180,1246,1246,2],["조우",1230,1230,1350,5],["발라카스",1430,1430,4530,4],["질리언",1568,1790,1790,2],["데포로쥬",1640,1669,1669,2],["오렌",2690,2790,2790,2]];
-const IBAY = [["아인하사드",720,730,750,11],["로엔그린",730,750,1020,11],["아툰",750,850,860,10],["아스테어",750,760,770,8],["캐스톨",800,900,950,12],["듀크데필",810,830,880,11],["마프르",820,830,880,11],["데컨",820,870,900,10],["발센",880,910,990,11],["어레인",880,1010,1110,11],["파아그리오",900,930,990,11],["케레니스",900,930,940,14],["가드리아",910,950,990,10],["에바",940,980,1020,12],["세바스챤",950,970,990,9],["사이하",970,990,1020,9],["크리스터",980,1040,1070,12],["린델",1000,1000,1020,12],["하이네",1000,1010,1070,12],["하딘",1010,1060,1060,12],["군터",1040,1060,1070,9],["켄라우헬",1050,1090,1200,13],["오웬",1080,1160,1180,13],["조우",1143,1330,1800,18],["이실로테",1240,1300,1320,14],["발라카스",1410,1430,1500,9],["질리언",1420,1470,1600,9],["데포로쥬",1520,1540,2900,13],["오렌",2690,2710,2800,9]];
-const BARO = [["아인하사드",668,750,800,16],["로엔그린",680,750,1000,9],["아스테어",720,750,820,6],["데컨",790,840,870,11],["아툰",800,825,850,13],["듀크데필",801,830,870,12],["가드리아",850,920,2490,13],["마프르",850,900,900,6],["캐스톨",850,870,930,9],["발센",850,900,990,10],["케레니스",870,910,1400,12],["세바스챤",900,950,990,8],["에바",900,960,980,9],["사이하",909,970,1300,14],["파아그리오",910,920,930,7],["린델",939,1000,1030,14],["하이네",940,1020,1090,12],["어레인",950,1000,1090,8],["군터",960,1020,1070,13],["크리스터",980,1010,1060,10],["하딘",980,1040,1060,10],["켄라우헬",1046,1100,1500,10],["오웬",1090,1130,1150,14],["조우",1150,1200,1330,16],["이실로테",1200,1240,1500,12],["질리언",1290,1430,1600,11],["발라카스",1400,1400,1537,9],["데포로쥬",1520,1560,1700,15],["오렌",2638,2740,2800,7]];
-
-const PLATS = [["itemmania",MANIA],["itembay",IBAY],["barotem",BARO]];
-const fmt = n => n==null ? "—" : n.toLocaleString("ko-KR");
-
-function buildRows(){
-  const map = {};
-  PLATS.forEach(([name,arr])=>{
-    arr.forEach(([s,mn,md,mx,n])=>{
-      map[s] = map[s] || {srv:s,m:null,i:null,b:null,meds:[],ns:0};
-      const key = name==="itemmania"?"m":name==="itembay"?"i":"b";
-      map[s][key] = mn;
-      map[s].meds.push(md);
-      map[s].ns += n;
-    });
-  });
-  return Object.values(map).map(r=>{
-    const cands = [["itemmania",r.m],["itembay",r.i],["barotem",r.b]].filter(x=>x[1]!=null);
-    cands.sort((a,b)=>a[1]-b[1]);
-    const low = cands.length?cands[0][1]:null;
-    const lowPlat = cands.length?cands[0][0]:"";
-    const meds=[...r.meds].sort((a,b)=>a-b);
-    const med = meds.length?meds[Math.floor(meds.length/2)]:null;
-    return {...r,low,lowPlat,med,n:r.ns};
-  });
-}
-
-let ROWS = buildRows();
-let sortKey="low", sortDir=1;
-
-function render(){
-  const profit=+document.getElementById("profit").value/100;
-  const fee=+document.getElementById("fee").value/100;
-  const rate=+document.getElementById("rate").value;
-  const rows=[...ROWS].sort((a,b)=>{
-    let av=a[sortKey],bv=b[sortKey];
-    if(sortKey==="srv"){return sortDir*(""+av).localeCompare(""+bv,"ko");}
-    av=av==null?Infinity:av;bv=bv==null?Infinity:bv;
-    return sortDir*(av-bv);
-  });
-  const tb=document.getElementById("tb");tb.innerHTML="";
-  rows.forEach((r,i)=>{
-    const buy = r.low!=null ? r.low*(1-profit-fee)*rate : null;
-    const pf = r.low!=null ? r.low*profit : null;
-    const cell=(v,plat)=>`<td class="${r.lowPlat===plat&&v!=null&&v===r.low?'best':''}">${fmt(v)}</td>`;
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td class="l dim">${i+1}</td>`+
-      `<td class="l srv">${r.srv}</td>`+
-      cell(r.m,"itemmania")+cell(r.i,"itembay")+cell(r.b,"barotem")+
-      `<td class="best">${fmt(r.low)}<span class="tag">${r.lowPlat}</span></td>`+
-      `<td class="dim">${fmt(r.med)}</td>`+
-      `<td class="dim">${r.n}</td>`+
-      `<td class="buy">${buy==null?'—':'¥'+buy.toFixed(3)}</td>`+
-      `<td class="profit">${pf==null?'—':fmt(Math.round(pf))}</td>`;
-    tb.appendChild(tr);
-  });
-  const lows=ROWS.map(r=>r.low).filter(v=>v!=null);
-  const minAll=Math.min(...lows);
-  const cheapest=ROWS.reduce((a,b)=>(b.low!=null&&(a==null||b.low<a.low))?b:a,null);
-  document.getElementById("stats").innerHTML=
-    `<div class="stat"><div class="k">커버 서버</div><div class="v">${ROWS.length}개</div></div>`+
-    `<div class="stat"><div class="k">전체 최저(만당)</div><div class="v">${fmt(minAll)}원</div></div>`+
-    `<div class="stat"><div class="k">최저 서버</div><div class="v">${cheapest.srv} <span class="tag">${cheapest.lowPlat}</span></div></div>`+
-    `<div class="stat"><div class="k">환율</div><div class="v">${rate} 元/원</div></div>`;
-  document.getElementById("platrow").innerHTML=
-    PLATS.map(([n,arr])=>`<div><b>${n}</b> 최저 ${fmt(Math.min(...arr.map(x=>x[1])))}원 / ${arr.length}서버</div>`).join("");
-  document.getElementById("meta").textContent=`데이터 시점: ${SCRAPED}  ·  itemmania / itembay / barotem 매도 호가 기준  ·  서버별 최저가 비교`;
-}
-
-document.querySelectorAll("th").forEach(th=>{
-  th.addEventListener("click",()=>{
-    const k=th.dataset.k;if(k==="idx")return;
-    if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=1;}
-    render();
-  });
-});
-["profit","fee","rate"].forEach(id=>document.getElementById(id).addEventListener("input",render));
-render();
-</script>
 </body>
 </html>
