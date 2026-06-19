@@ -1,179 +1,162 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>天堂经典 · 阿登/阿데나 三平台行情看板</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>천당 클래식 · 아덴/아데나 3플랫폼 시세판</title>
 <style>
-  :root{--bg:#0f1115;--card:#181b22;--line:#272b34;--txt:#e6e9ef;--mut:#9aa3b2;--accent:#ffb454;--green:#5ad17a;--blue:#5aa9ff;--purple:#b78bff;}
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,"Segoe UI",Roboto,"Malgun Gothic","Microsoft YaHei",sans-serif;font-size:14px;}
-  .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 60px;}
-  h1{font-size:20px;margin:0 0 4px;}
-  .sub{color:var(--mut);font-size:12px;margin-bottom:16px;}
-  .sub b{color:var(--txt);}
-  .controls{display:flex;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
-  .ctrl{display:flex;flex-direction:column;gap:4px;}
-  .ctrl label{font-size:11px;color:var(--mut);}
-  .ctrl input{width:110px;background:#0f1115;border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:7px 9px;font-size:14px;}
-  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-bottom:10px;align-items:center;}
-  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle;}
-  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;}
-  table{border-collapse:collapse;width:100%;min-width:920px;}
-  th,td{padding:9px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line);}
-  th{position:sticky;top:0;background:#1d212a;color:var(--mut);font-weight:600;font-size:12px;cursor:pointer;}
-  th:nth-child(2),td:nth-child(2){text-align:left;}
-  tbody tr:hover{background:#1d212a;}
-  td.sv{font-weight:600;}
-  .min-mark{font-size:10px;padding:1px 5px;border-radius:6px;margin-left:6px;color:#0f1115;font-weight:700;}
-  .m-mania{background:var(--accent);}
-  .m-ibay{background:var(--blue);}
-  .m-baro{background:var(--purple);}
-  .lowcell{color:var(--green);font-weight:700;}
-  .buy{color:var(--accent);font-weight:700;}
-  .na{color:#555;}
-  tfoot td{color:var(--mut);font-size:11px;text-align:left;padding-top:10px;}
-  .platsum{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0 14px;}
-  .pcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;flex:1;min-width:150px;}
-  .pcard .nm{font-size:12px;color:var(--mut);}
-  .pcard .vl{font-size:18px;font-weight:700;margin-top:3px;}
+:root{--bg:#0f1117;--card:#171a23;--line:#262b38;--txt:#e6e9ef;--mut:#8a93a6;--accent:#4ade80;--accent2:#60a5fa;--warn:#fbbf24;--low:#f87171;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;font-size:14px;}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 14px 60px;}
+h1{font-size:20px;margin:0 0 4px;}
+.sub{color:var(--mut);font-size:12.5px;margin-bottom:14px;}
+.controls{display:flex;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+.ctrl{display:flex;flex-direction:column;gap:4px;}
+.ctrl label{font-size:11.5px;color:var(--mut);}
+.ctrl input{width:110px;background:#0c0e14;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:7px 9px;font-size:14px;}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:120px;}
+.stat .k{font-size:11px;color:var(--mut);}
+.stat .v{font-size:16px;font-weight:600;margin-top:2px;}
+.tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;}
+table{border-collapse:collapse;width:100%;min-width:920px;font-variant-numeric:tabular-nums;}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+th{position:sticky;top:0;background:#1b1f2a;color:var(--mut);font-weight:600;font-size:12px;cursor:pointer;user-select:none;}
+th.l,td.l{text-align:left;}
+tr:hover td{background:#1c2030;}
+.srv{font-weight:600;}
+.best{color:var(--accent);font-weight:700;}
+.tag{display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:6px;background:#22304a;color:var(--accent2);margin-left:6px;}
+.dim{color:var(--mut);}
+.buy{color:var(--warn);font-weight:600;}
+.profit{color:var(--accent);}
+.foot{margin-top:16px;color:var(--mut);font-size:11.5px;line-height:1.7;}
+.platrow{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px;font-size:12.5px;}
+.platrow b{color:var(--accent2);}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>天堂经典 · 阿登/阿데나 三平台行情看板</h1>
-  <div class="sub">数据时点 <b id="ts"></b> · 单位：韩元/万阿덴(아데나) · 卖价取各区最低/中位/最高 · 仅供参考，绝不代表挂单/下单</div>
+<h1>천당 클래식 · 아덴/아데나 3플랫폼 시세판</h1>
+<div class="sub" id="meta"></div>
 
-  <div class="platsum" id="platsum"></div>
+<div class="controls">
+  <div class="ctrl"><label>이익률 (%)</label><input id="profit" type="number" value="10" step="0.5"></div>
+  <div class="ctrl"><label>플랫폼 수수료 (%)</label><input id="fee" type="number" value="5" step="0.5"></div>
+  <div class="ctrl"><label>환율 (元/원)</label><input id="rate" type="number" value="0.0046" step="0.0001"></div>
+</div>
 
-  <div class="controls">
-    <div class="ctrl"><label>利润率 %</label><input id="profit" type="number" step="0.5" value="10"></div>
-    <div class="ctrl"><label>平台费 %</label><input id="fee" type="number" step="0.5" value="5"></div>
-    <div class="ctrl"><label>汇率 (1韩元=?元)</label><input id="rate" type="number" step="0.0001" value="0.0048"></div>
-  </div>
+<div class="platrow" id="platrow"></div>
+<div class="stats" id="stats"></div>
 
-  <div class="legend">
-    <span><span class="dot" style="background:var(--accent)"></span>itemmania</span>
-    <span><span class="dot" style="background:var(--blue)"></span>itembay</span>
-    <span><span class="dot" style="background:var(--purple)"></span>barotem</span>
-    <span style="color:var(--green)">绿色＝全站最低卖价</span>
-    <span>点击表头可排序</span>
-  </div>
+<div class="tablewrap">
+<table>
+<thead><tr>
+<th class="l" data-k="idx">#</th>
+<th class="l" data-k="srv">서버</th>
+<th data-k="m">itemmania</th>
+<th data-k="i">itembay</th>
+<th data-k="b">barotem</th>
+<th data-k="low">전체 최저</th>
+<th data-k="med">중위가</th>
+<th data-k="n">표본수</th>
+<th data-k="buy">수매 상한(元/만)</th>
+<th data-k="pf">이익(원/만)</th>
+</tr></thead>
+<tbody id="tb"></tbody>
+</table>
+</div>
 
-  <div class="tbl-wrap">
-    <table id="board">
-      <thead><tr>
-        <th data-k="0">#</th>
-        <th data-k="sv">服务器</th>
-        <th data-k="mania">itemmania</th>
-        <th data-k="ibay">itembay</th>
-        <th data-k="baro">barotem</th>
-        <th data-k="low">全站最低</th>
-        <th data-k="med">中位价</th>
-        <th data-k="n">样本数</th>
-        <th data-k="buy">收购上限(元/万)</th>
-        <th data-k="pft">利润(韩元/万)</th>
-      </tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-  <div class="sub" style="margin-top:12px">收购上限 = 全站最低 × (1 − 利润% − 平台%) × 汇率 ；利润 = 全站最低 × 利润%</div>
+<div class="foot">
+계산식 — 수매 상한 = 전체 최저 × (1 − 이익률% − 수수료%) × 환율 &nbsp;|&nbsp; 이익 = 전체 최저 × 이익률%<br>
+표시가는 「만(萬) 아덴당 원」 매도 호가 기준. 각 플랫폼 열은 해당 서버 최저 호가입니다. 전체 최저 옆 태그는 최저가 플랫폼.<br>
+※ 본 시세판은 가격 조회·비교용입니다. 어떤 매수/매도/주문도 수행하지 않습니다.
+</div>
 </div>
 
 <script>
-// ===== 数据常量(自动刷新覆盖) =====
-const SCRAPED = "2026-06-19 18:37";
-const RATE_DEFAULT = 0.0048;
-const MANIA = [["아인하사드",621,720,1800,37],["로엔그린",678,720,760,10],["아스테어",700,720,2800,8],["아툰",790,840,860,4],["캐스톨",800,910,957,3],["듀크데필",810,880,2800,3],["케레니스",880,880,2800,5],["어레인",880,1030,1030,2],["발센",880,940,990,4],["데컨",880,890,2000,3],["마프르",880,880,880,1],["가드리아",900,930,2500,4],["파아그리오",930,2500,2500,2],["에바",940,1010,1020,3],["하이네",950,1060,2800,3],["세바스챤",960,990,990,2],["사이하",970,980,1900,3],["크리스터",980,980,1050,3],["린델",1020,1020,1020,1],["군터",1040,1060,1070,3],["켄라우헬",1050,1150,1180,4],["하딘",1050,1060,1060,2],["오웬",1080,1080,1195,4],["조우",1180,1180,1260,4],["이실로테",1180,1180,1310,3],["질리언",1270,1790,1790,2],["발라카스",1350,1480,4530,3],["데포로쥬",1540,1560,1570,4],["오렌",2650,2690,2790,3]];
-const IBAY = [["아인하사드",720,730,750,10],["로엔그린",730,750,1020,13],["아스테어",750,760,770,7],["캐스톨",800,900,950,14],["아툰",810,850,860,8],["듀크데필",810,830,880,11],["데컨",810,870,900,11],["마프르",820,870,880,10],["발센",880,910,990,11],["어레인",880,1010,1110,11],["케레니스",880,920,940,13],["가드리아",900,930,990,12],["파아그리오",910,930,940,10],["에바",940,950,1020,14],["세바스챤",950,970,990,9],["사이하",970,990,1020,9],["크리스터",980,1040,1070,12],["린델",1000,1000,1020,14],["하이네",1000,1010,1070,13],["하딘",1010,1060,1060,11],["군터",1040,1070,1090,9],["켄라우헬",1050,1110,1800,14],["오웬",1080,1080,1180,11],["조우",1143,1190,1800,16],["이실로테",1180,1240,1320,13],["질리언",1300,1470,1600,9],["발라카스",1410,1430,1500,11],["데포로쥬",1520,1540,2900,14],["오렌",2690,2710,2800,9]];
-const BARO = [["아인하사드",668,720,800,17],["아스테어",720,750,1300,10],["로엔그린",740,750,1000,7],["데컨",800,840,870,7],["아툰",800,810,850,8],["듀크데필",801,820,870,13],["캐스톨",820,870,930,10],["마프르",835,900,993,10],["발센",849,900,990,11],["케레니스",870,900,1018,13],["가드리아",879,940,2490,12],["파아그리오",897,920,930,8],["세바스챤",900,920,990,9],["에바",900,960,992,12],["사이하",909,960,1010,15],["어레인",934,1000,1090,9],["린델",939,1000,1030,14],["하이네",940,1020,1090,12],["크리스터",968,1010,1060,9],["하딘",980,1030,1060,9],["군터",999,1050,1120,8],["켄라우헬",1070,1100,1500,11],["오웬",1100,1130,1150,13],["조우",1150,1200,1330,16],["이실로테",1180,1220,1500,15],["질리언",1290,1400,1600,10],["발라카스",1389,1400,1500,10],["데포로쥬",1500,1570,1700,11],["오렌",2500,2740,2800,8]];
-// ===================================
+const SCRAPED = "2026. 06. 19. 오후 06:47";
+const RATE_DEFAULT = 0.0046;
+const MANIA = [["아인하사드",668,720,1150,35],["로엔그린",678,730,970,17],["아스테어",700,720,720,4],["데컨",790,880,2000,5],["캐스톨",800,800,940,4],["아툰",800,840,860,3],["듀크데필",810,810,880,3],["어레인",880,1110,1188,4],["발센",880,930,940,4],["마프르",880,880,880,1],["파아그리오",890,930,930,2],["케레니스",900,930,1050,4],["에바",940,940,1080,4],["세바스챤",960,990,2500,3],["크리스터",980,1050,1050,2],["사이하",980,980,980,1],["가드리아",990,990,990,1],["린델",1000,1000,1020,4],["하이네",1010,1010,1010,4],["군터",1040,1060,1070,3],["오웬",1050,1160,1170,4],["하딘",1050,1060,1060,2],["이실로테",1180,1250,1310,4],["켄라우헬",1180,1246,1246,2],["조우",1230,1230,1350,5],["발라카스",1430,1430,4530,4],["질리언",1568,1790,1790,2],["데포로쥬",1640,1669,1669,2],["오렌",2690,2790,2790,2]];
+const IBAY = [["아인하사드",720,730,750,11],["로엔그린",730,750,1020,11],["아툰",750,850,860,10],["아스테어",750,760,770,8],["캐스톨",800,900,950,12],["듀크데필",810,830,880,11],["마프르",820,830,880,11],["데컨",820,870,900,10],["발센",880,910,990,11],["어레인",880,1010,1110,11],["파아그리오",900,930,990,11],["케레니스",900,930,940,14],["가드리아",910,950,990,10],["에바",940,980,1020,12],["세바스챤",950,970,990,9],["사이하",970,990,1020,9],["크리스터",980,1040,1070,12],["린델",1000,1000,1020,12],["하이네",1000,1010,1070,12],["하딘",1010,1060,1060,12],["군터",1040,1060,1070,9],["켄라우헬",1050,1090,1200,13],["오웬",1080,1160,1180,13],["조우",1143,1330,1800,18],["이실로테",1240,1300,1320,14],["발라카스",1410,1430,1500,9],["질리언",1420,1470,1600,9],["데포로쥬",1520,1540,2900,13],["오렌",2690,2710,2800,9]];
+const BARO = [["아인하사드",668,750,800,16],["로엔그린",680,750,1000,9],["아스테어",720,750,820,6],["데컨",790,840,870,11],["아툰",800,825,850,13],["듀크데필",801,830,870,12],["가드리아",850,920,2490,13],["마프르",850,900,900,6],["캐스톨",850,870,930,9],["발센",850,900,990,10],["케레니스",870,910,1400,12],["세바스챤",900,950,990,8],["에바",900,960,980,9],["사이하",909,970,1300,14],["파아그리오",910,920,930,7],["린델",939,1000,1030,14],["하이네",940,1020,1090,12],["어레인",950,1000,1090,8],["군터",960,1020,1070,13],["크리스터",980,1010,1060,10],["하딘",980,1040,1060,10],["켄라우헬",1046,1100,1500,10],["오웬",1090,1130,1150,14],["조우",1150,1200,1330,16],["이실로테",1200,1240,1500,12],["질리언",1290,1430,1600,11],["발라카스",1400,1400,1537,9],["데포로쥬",1520,1560,1700,15],["오렌",2638,2740,2800,7]];
 
-const SERVERS_ZH = {"아인하사드":"阿因哈萨德","로엔그린":"罗恩格林","아스테어":"阿斯泰尔","아툰":"阿屯","캐스톨":"卡斯托尔","듀크데필":"杜克德菲","케레니스":"凯雷尼斯","어레인":"厄雷恩","발센":"瓦尔森","데컨":"德肯","마프르":"玛弗尔","가드리아":"加德里亚","파아그리오":"帕格里奥","에바":"艾娃","하이네":"海涅","세바스챤":"塞巴斯钱","사이하":"赛哈","크리스터":"克里斯特","린델":"林德","군터":"君特","켄라우헬":"肯劳赫","하딘":"哈丁","오웬":"欧文","조우":"乔武","이실로테":"伊实洛特","질리언":"齐利安","발라카스":"巴拉卡斯","데포로쥬":"德波罗쥬","오렌":"奥伦"};
+const PLATS = [["itemmania",MANIA],["itembay",IBAY],["barotem",BARO]];
+const fmt = n => n==null ? "—" : n.toLocaleString("ko-KR");
 
-function toMap(arr){const m={};arr.forEach(r=>m[r[0]]=r);return m;}
-const mMania=toMap(MANIA),mIbay=toMap(IBAY),mBaro=toMap(BARO);
-const allServers=[...new Set([...MANIA,...IBAY,...BARO].map(r=>r[0]))];
-
-document.getElementById('ts').textContent=SCRAPED;
-document.getElementById('rate').value=RATE_DEFAULT;
-
-function rows(){
-  return allServers.map(sv=>{
-    const a=mMania[sv],b=mIbay[sv],c=mBaro[sv];
-    const cands=[];
-    if(a)cands.push(['mania',a[1]]);
-    if(b)cands.push(['ibay',b[1]]);
-    if(c)cands.push(['baro',c[1]]);
-    let low=null,lowP=null;
-    cands.forEach(([p,v])=>{if(low===null||v<low){low=v;lowP=p;}});
-    const meds=[a&&a[2],b&&b[2],c&&c[2]].filter(x=>x!=null).sort((x,y)=>x-y);
-    const med=meds.length?meds[Math.floor(meds.length/2)]:null;
-    const n=(a?a[4]:0)+(b?b[4]:0)+(c?c[4]:0);
-    return {sv,mania:a?a[1]:null,ibay:b?b[1]:null,baro:c?c[1]:null,low,lowP,med,n};
+function buildRows(){
+  const map = {};
+  PLATS.forEach(([name,arr])=>{
+    arr.forEach(([s,mn,md,mx,n])=>{
+      map[s] = map[s] || {srv:s,m:null,i:null,b:null,meds:[],ns:0};
+      const key = name==="itemmania"?"m":name==="itembay"?"i":"b";
+      map[s][key] = mn;
+      map[s].meds.push(md);
+      map[s].ns += n;
+    });
+  });
+  return Object.values(map).map(r=>{
+    const cands = [["itemmania",r.m],["itembay",r.i],["barotem",r.b]].filter(x=>x[1]!=null);
+    cands.sort((a,b)=>a[1]-b[1]);
+    const low = cands.length?cands[0][1]:null;
+    const lowPlat = cands.length?cands[0][0]:"";
+    const meds=[...r.meds].sort((a,b)=>a-b);
+    const med = meds.length?meds[Math.floor(meds.length/2)]:null;
+    return {...r,low,lowPlat,med,n:r.ns};
   });
 }
 
-function fmt(v){return v==null?'<span class="na">—</span>':v.toLocaleString();}
-const PMARK={mania:['m-mania','MANIA'],ibay:['m-ibay','IBAY'],baro:['m-baro','BARO']};
+let ROWS = buildRows();
+let sortKey="low", sortDir=1;
 
-let sortKey='low',sortDir=1;
 function render(){
-  const profit=+document.getElementById('profit').value/100;
-  const fee=+document.getElementById('fee').value/100;
-  const rate=+document.getElementById('rate').value;
-  let data=rows();
-  data.forEach(r=>{
-    r.buy=r.low!=null?r.low*(1-profit-fee)*rate:null;
-    r.pft=r.low!=null?r.low*profit:null;
+  const profit=+document.getElementById("profit").value/100;
+  const fee=+document.getElementById("fee").value/100;
+  const rate=+document.getElementById("rate").value;
+  const rows=[...ROWS].sort((a,b)=>{
+    let av=a[sortKey],bv=b[sortKey];
+    if(sortKey==="srv"){return sortDir*(""+av).localeCompare(""+bv,"ko");}
+    av=av==null?Infinity:av;bv=bv==null?Infinity:bv;
+    return sortDir*(av-bv);
   });
-  data.sort((x,y)=>{
-    let xv=x[sortKey],yv=y[sortKey];
-    if(sortKey==='sv'){xv=x.sv;yv=y.sv;return sortDir*(''+xv).localeCompare(''+yv);}
-    if(xv==null)return 1;if(yv==null)return -1;
-    return sortDir*(xv-yv);
+  const tb=document.getElementById("tb");tb.innerHTML="";
+  rows.forEach((r,i)=>{
+    const buy = r.low!=null ? r.low*(1-profit-fee)*rate : null;
+    const pf = r.low!=null ? r.low*profit : null;
+    const cell=(v,plat)=>`<td class="${r.lowPlat===plat&&v!=null&&v===r.low?'best':''}">${fmt(v)}</td>`;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="l dim">${i+1}</td>`+
+      `<td class="l srv">${r.srv}</td>`+
+      cell(r.m,"itemmania")+cell(r.i,"itembay")+cell(r.b,"barotem")+
+      `<td class="best">${fmt(r.low)}<span class="tag">${r.lowPlat}</span></td>`+
+      `<td class="dim">${fmt(r.med)}</td>`+
+      `<td class="dim">${r.n}</td>`+
+      `<td class="buy">${buy==null?'—':'¥'+buy.toFixed(3)}</td>`+
+      `<td class="profit">${pf==null?'—':fmt(Math.round(pf))}</td>`;
+    tb.appendChild(tr);
   });
-  const tb=document.querySelector('#board tbody');
-  tb.innerHTML=data.map((r,i)=>{
-    const zh=SERVERS_ZH[r.sv]||'';
-    const pm=r.lowP?PMARK[r.lowP]:null;
-    const mark=pm?`<span class="min-mark ${pm[0]}">${pm[1]}</span>`:'';
-    return `<tr>
-      <td>${i+1}</td>
-      <td class="sv">${r.sv}<span style="color:var(--mut);font-weight:400"> ${zh}</span></td>
-      <td>${fmt(r.mania)}</td>
-      <td>${fmt(r.ibay)}</td>
-      <td>${fmt(r.baro)}</td>
-      <td class="lowcell">${fmt(r.low)}${mark}</td>
-      <td>${fmt(r.med)}</td>
-      <td>${r.n}</td>
-      <td class="buy">${r.buy!=null?r.buy.toFixed(2):'<span class="na">—</span>'}</td>
-      <td>${r.pft!=null?Math.round(r.pft).toLocaleString():'<span class="na">—</span>'}</td>
-    </tr>`;
-  }).join('');
-  renderSummary(data);
+  const lows=ROWS.map(r=>r.low).filter(v=>v!=null);
+  const minAll=Math.min(...lows);
+  const cheapest=ROWS.reduce((a,b)=>(b.low!=null&&(a==null||b.low<a.low))?b:a,null);
+  document.getElementById("stats").innerHTML=
+    `<div class="stat"><div class="k">커버 서버</div><div class="v">${ROWS.length}개</div></div>`+
+    `<div class="stat"><div class="k">전체 최저(만당)</div><div class="v">${fmt(minAll)}원</div></div>`+
+    `<div class="stat"><div class="k">최저 서버</div><div class="v">${cheapest.srv} <span class="tag">${cheapest.lowPlat}</span></div></div>`+
+    `<div class="stat"><div class="k">환율</div><div class="v">${rate} 元/원</div></div>`;
+  document.getElementById("platrow").innerHTML=
+    PLATS.map(([n,arr])=>`<div><b>${n}</b> 최저 ${fmt(Math.min(...arr.map(x=>x[1])))}원 / ${arr.length}서버</div>`).join("");
+  document.getElementById("meta").textContent=`데이터 시점: ${SCRAPED}  ·  itemmania / itembay / barotem 매도 호가 기준  ·  서버별 최저가 비교`;
 }
 
-function platLow(arr){return arr.length?Math.min(...arr.map(r=>r[1])):null;}
-function renderSummary(){
-  const items=[
-    ['itemmania',platLow(MANIA),MANIA.length,'var(--accent)'],
-    ['itembay',platLow(IBAY),IBAY.length,'var(--blue)'],
-    ['barotem',platLow(BARO),BARO.length,'var(--purple)']
-  ];
-  document.getElementById('platsum').innerHTML=items.map(([nm,lo,n,c])=>
-    `<div class="pcard"><div class="nm">${nm}</div><div class="vl" style="color:${c}">${lo!=null?lo.toLocaleString():'—'} <span style="font-size:12px;color:var(--mut)">韩元/万</span></div><div class="nm">覆盖 ${n} 区 · 全站最低</div></div>`
-  ).join('');
-}
-
-document.querySelectorAll('#board th').forEach(th=>{
-  th.addEventListener('click',()=>{
-    const k=th.dataset.k;if(k==='0')return;
-    if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=k==='sv'?1:1;}
+document.querySelectorAll("th").forEach(th=>{
+  th.addEventListener("click",()=>{
+    const k=th.dataset.k;if(k==="idx")return;
+    if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=1;}
     render();
   });
 });
-['profit','fee','rate'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+["profit","fee","rate"].forEach(id=>document.getElementById(id).addEventListener("input",render));
 render();
 </script>
 </body>
