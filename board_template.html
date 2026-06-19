@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天堂经典 · 阿登/阿德纳 三平台行情看板</title>
+<style>
+  :root{
+    --bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--border:#2a3140;
+    --text:#e6edf3;--muted:#8b949e;--accent:#3fb950;--accent2:#58a6ff;
+    --warn:#d29922;--bar:#1f6feb;--bar-bg:#21262d;--red:#ff7b72;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;padding:20px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  h1{font-size:22px;margin:0 0 4px;font-weight:700;}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:16px;}
+  .sub b{color:var(--accent2);}
+  .panel-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:16px;background:var(--panel);
+    border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;}
+  .ct{display:flex;align-items:center;gap:6px;color:var(--muted);}
+  .ct label{color:var(--text);}
+  .ct input{width:80px;background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    border-radius:6px;padding:5px 8px;font-size:13px;text-align:right;}
+  .ct.hint{color:var(--muted);font-size:11px;}
+  .ct.hint b{color:var(--accent2);}
+  .cards{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+  .card .label{color:var(--muted);font-size:12px;margin-bottom:6px;}
+  .card .val{font-size:18px;font-weight:700;}
+  .card .val.green{color:var(--accent);}
+  .card .val.blue{color:var(--accent2);}
+  table{width:100%;border-collapse:collapse;background:var(--panel);
+    border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:13px;}
+  thead th{background:var(--panel2);color:var(--muted);font-weight:600;
+    text-align:right;padding:10px 10px;cursor:pointer;user-select:none;white-space:nowrap;
+    border-bottom:1px solid var(--border);}
+  thead th:first-child,thead th:nth-child(2),thead th:nth-child(3){text-align:left;}
+  thead th:hover{color:var(--text);}
+  tbody td.dd{text-align:left;color:#9aa4b2;font-size:12px;}
+  thead th .arr{font-size:10px;opacity:.7;}
+  tbody td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;}
+  tbody td:first-child{color:var(--muted);text-align:left;}
+  tbody td.srv{text-align:left;font-weight:600;color:var(--text);}
+  tbody tr:hover{background:#1b2230;}
+  tbody tr:last-child td{border-bottom:none;}
+  .best{color:var(--accent);font-weight:700;}
+  .best::after{content:" ◆";font-size:9px;}
+  .plat-low{color:var(--accent);font-weight:700;}
+  .buy{color:var(--red);font-weight:700;}
+  .profit{color:var(--accent);font-weight:600;}
+  .na{color:#4b5563;}
+  .pill{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;margin-left:4px;
+    background:#21303f;color:var(--accent2);}
+  .note{margin-top:16px;color:var(--muted);font-size:12px;line-height:1.75;
+    background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .note b{color:var(--text);}
+  .miss{margin-top:12px;color:var(--warn);font-size:12px;}
+  @media(max-width:880px){.cards{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>天堂经典 · 阿登/阿德纳 三平台行情看板</h1>
+  <div class="sub">游戏内金币(阿德纳)卖价对比 · 平台:<b>itemmania · itembay · barotem</b> · 韩国卖价单位:<b>韩元 / 1万个</b></div>
+
+  <div class="panel-ctrl" id="ctrl">
+    <span class="ct"><label>我的利润</label><input id="p_profit" type="number" step="1" value="10"><b>%</b></span>
+    <span class="ct"><label>平台费</label><input id="p_plat" type="number" step="1" value="5"><b>%</b></span>
+    <span class="ct"><label>汇率 1韩元=</label><input id="p_rate" type="number" step="0.0001" value="0.0047"><b>元</b></span>
+    <span class="ct hint">收购上限(人民币)= 全站最低卖价 ×(1 − 利润% − 平台%)× 汇率 · 利润以<b>韩元</b>显示</span>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th data-k="rank">#</th>
+        <th data-k="server">服务器(韩)</th>
+        <th data-k="dd">DD373中文名</th>
+        <th data-k="mania">itemmania <span class="arr"></span></th>
+        <th data-k="ibay">itembay <span class="arr"></span></th>
+        <th data-k="baro">barotem <span class="arr"></span></th>
+        <th data-k="low">全站最低 <span class="arr"></span></th>
+        <th data-k="med">中位价 <span class="arr"></span></th>
+        <th data-k="nsum">样本数 <span class="arr"></span></th>
+        <th data-k="buy">收购上限(元/万) <span class="arr"></span></th>
+        <th data-k="profit">利润(韩元/万) <span class="arr"></span></th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="miss" id="miss"></div>
+
+  <div class="note">
+    <b>口径说明</b><br>
+    · 三个平台各自抓取「리니지클래식 아데나(阿德纳)」卖单,按服务器分组,取每区当前样本的<b>最低卖价</b>。<br>
+    · 「全站最低」= 三平台中最便宜的那个,后面标注来自哪个平台(◆ 绿色为该行最便宜平台)。<br>
+    · 「中位价」= 三平台各自最低价的中位数(反映该区普遍价位);「样本数」= 三平台合计抓到的报价条数,越多越可靠。<br>
+    · 「收购上限(元/万)」= 全站最低卖价 ×(1 − 我的利润% − 平台费%)× 汇率,即你在中国收币的最高出价(人民币),低于此价才有利可图。<br>
+    · 「利润(韩元/万)」= 全站最低卖价 × 我的利润%,因你在韩国结算,利润以韩元显示。利润/平台费/汇率可在上方调整,表格实时重算。<br>
+    · 「DD373中文名」为中国 DD373 平台(韩服)对该区的繁体中文译名(希腊神名),方便在 DD373 收币时按名对照;注意 하이네 与 발센 在 DD373 同名「牛人彌諾陶洛斯」,收币时以韩文区名为准。<br>
+    · 服务器名为韩服原名(专有名词),未翻译。本看板每 10 分钟自动刷新。
+  </div>
+</div>
+
+<script>
+const SCRAPED = __SCRAPED__;
+const RATE_DEFAULT = __RATE__;
+const MANIA = __MANIA__;
+const IBAY = __IBAY__;
+const BARO = __BARO__;
+
+const ALL=["데포로쥬","켄라우헬","질리언","이실로테","조우","하딘","케레니스","오웬","크리스터","아인하사드","아툰","가드리아","군터","아스테어","듀크데필","발센","어레인","캐스톨","세바스챤","데컨","파아그리오","에바","사이하","마프르","린델","하이네","로엔그린","발라카스","오렌"];
+const DD373={"데포로쥬":"太陽神阿波羅","켄라우헬":"愛神邱比特","질리언":"勝利女神雅典娜","이실로테":"美神維納斯","조우":"天神宙斯","하딘":"天后海拉","케레니스":"戰神馬爾斯","오웬":"月亮女神阿緹蜜斯","크리스터":"海神波塞冬","아인하사드":"水蛇許德拉","아툰":"冥王哈迪斯","가드리아":"火神赫發斯特斯","군터":"收穫女神帝蜜特","아스테어":"蛇髮女美杜沙","듀크데필":"半人馬涅索斯","발센":"牛人彌諾陶洛斯","어레인":"俄雷恩","캐스톨":"凱斯特","세바스챤":"獅子涅墨亞","데컨":"飛馬珀伽索斯","파아그리오":"公牛克里特","에바":"女妖塞壬","사이하":"巨龍拉多","마프르":"百眼怪阿爾戈斯","린델":"大地之神蓋亞","하이네":"牛人彌諾陶洛斯(新)","로엔그린":"泰坦女神瑞亞","발라카스":"地獄犬刻耳柏洛斯","오렌":"獨眼巨人庫克羅普斯"};
+const fmt = n => (n==null?"-":Number(n).toLocaleString("zh-CN"));
+const toMap = arr => Object.fromEntries(arr.map(r=>[r[0],{min:r[1],med:r[2],max:r[3],n:r[4]}]));
+const mM=toMap(MANIA), mI=toMap(IBAY), mB=toMap(BARO);
+const median = a => {const x=[...a].sort((p,q)=>p-q);const k=Math.floor(x.length/2);return x.length%2?x[k]:Math.round((x[k-1]+x[k])/2);};
+
+const rows = ALL.map(s=>{
+  const a=mM[s], b=mI[s], c=mB[s];
+  const cand=[["mania",a&&a.min],["ibay",b&&b.min],["baro",c&&c.min]].filter(x=>x[1]);
+  let low=null, lowPlat=null;
+  cand.forEach(x=>{if(low==null||x[1]<low){low=x[1];lowPlat=x[0];}});
+  const med = cand.length?median(cand.map(x=>x[1])):null;
+  const nsum = (a?a.n:0)+(b?b.n:0)+(c?c.n:0);
+  return {server:s, mania:a&&a.min, ibay:b&&b.min, baro:c&&c.min, low, lowPlat, med, nsum};
+}).filter(r=>r.low!=null);
+
+function params(){
+  const pf=parseFloat(document.getElementById("p_profit").value)||0;
+  const pl=parseFloat(document.getElementById("p_plat").value)||0;
+  const rt=parseFloat(document.getElementById("p_rate").value)||0;
+  return {pf,pl,rt};
+}
+function compute(){
+  const {pf,pl,rt}=params();
+  rows.forEach(r=>{r.buy=r.low*(1-(pf+pl)/100)*rt; r.profit=r.low*pf/100;});
+}
+
+function renderCards(){
+  const lows=rows.map(r=>r.low);
+  const siteLow=Math.min(...lows);
+  const avgLow=Math.round(lows.reduce((a,b)=>a+b,0)/lows.length);
+  const platCount={mania:0,ibay:0,baro:0};
+  rows.forEach(r=>platCount[r.lowPlat]++);
+  const winner=Object.entries(platCount).sort((a,b)=>b[1]-a[1])[0];
+  const wname={mania:"itemmania",ibay:"itembay",baro:"barotem"}[winner[0]];
+  const c=[
+    ["数据时点", SCRAPED||"-",""],
+    ["覆盖服务器", rows.length+" 区",""],
+    ["三平台全站最低", fmt(siteLow)+" 韩元","green"],
+    ["各服最低均值", fmt(avgLow)+" 韩元","blue"],
+    ["最便宜平台(占多数)", wname+"("+winner[1]+"区)",""],
+  ];
+  document.getElementById("cards").innerHTML=c.map(x=>`<div class="card"><div class="label">${x[0]}</div><div class="val ${x[2]}">${x[1]}</div></div>`).join("");
+}
+
+let sortKey="low", sortAsc=true;
+function cellPlat(r,plat,key){
+  const v=r[key];
+  if(v==null)return `<td class="na">-</td>`;
+  const cls=(r.lowPlat===plat)?"plat-low":"";
+  return `<td class="${cls}">${fmt(v)}</td>`;
+}
+function renderRows(){
+  const body=document.getElementById("rows");
+  const pn={mania:"itemmania",ibay:"itembay",baro:"barotem"};
+  const sorted=[...rows].sort((a,b)=>{
+    let va=a[sortKey],vb=b[sortKey];
+    if(sortKey==="server")return sortAsc?a.server.localeCompare(b.server):b.server.localeCompare(a.server);
+    if(va==null)va=Infinity; if(vb==null)vb=Infinity;
+    return sortAsc?va-vb:vb-va;
+  });
+  body.innerHTML=sorted.map((r,i)=>`<tr>
+    <td>${i+1}</td>
+    <td class="srv">${r.server}</td>
+    <td class="dd">${DD373[r.server]||"-"}</td>
+    ${cellPlat(r,"mania","mania")}
+    ${cellPlat(r,"ibay","ibay")}
+    ${cellPlat(r,"baro","baro")}
+    <td class="best">${fmt(r.low)}<span class="pill">${pn[r.lowPlat]}</span></td>
+    <td>${fmt(r.med)}</td>
+    <td>${fmt(r.nsum)}</td>
+    <td class="buy">¥${r.buy.toFixed(2)}</td>
+    <td class="profit">${fmt(Math.round(r.profit))} 원</td>
+  </tr>`).join("");
+}
+function renderMiss(){
+  const miss=ALL.filter(s=>!rows.find(r=>r.server===s));
+  document.getElementById("miss").textContent = miss.length?("未覆盖服务器("+miss.length+"):"+miss.join("、")):"";
+}
+
+document.querySelectorAll("thead th[data-k]").forEach(th=>{
+  th.addEventListener("click",()=>{
+    const k=th.dataset.k; if(k==="rank")return;
+    if(sortKey===k)sortAsc=!sortAsc; else {sortKey=k;sortAsc=true;}
+    document.querySelectorAll("thead th .arr").forEach(a=>a.textContent="");
+    const arr=th.querySelector(".arr"); if(arr)arr.textContent=sortAsc?"▲":"▼";
+    renderRows();
+  });
+});
+["p_profit","p_plat","p_rate"].forEach(id=>{
+  document.getElementById(id).addEventListener("input",()=>{compute();renderCards();renderRows();});
+});
+
+if(RATE_DEFAULT) document.getElementById("p_rate").value = RATE_DEFAULT;
+
+compute();
+renderCards();
+renderRows();
+renderMiss();
+</script>
+</body>
+</html>
