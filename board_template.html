@@ -64,7 +64,7 @@
 <body>
 <div class="wrap">
   <h1>天堂经典 · 阿登/阿德纳 三平台行情看板</h1>
-  <div class="sub">游戏内金币(阿德纳)卖价对比 · 平台:<b>itemmania · itembay · barotem</b> · 韩国卖价单位:<b>韩元 / 1万个</b></div>
+  <div class="sub">游戏内金币(阿德纳)卖价对比 · 平台:<b>itemmania · barotem · itembay</b> · 韩国卖价单位:<b>韩元 / 1万个</b></div>
 
   <div class="panel-ctrl" id="ctrl">
     <span class="ct"><label>我的利润</label><input id="p_profit" type="number" step="1" value="10"><b>%</b></span>
@@ -82,8 +82,8 @@
         <th data-k="server">服务器(韩)</th>
         <th data-k="dd">DD373中文名</th>
         <th data-k="mania">itemmania <span class="arr"></span></th>
-        <th data-k="ibay">itembay <span class="arr"></span></th>
         <th data-k="baro">barotem <span class="arr"></span></th>
+        <th data-k="ibay">itembay <span class="arr"></span></th>
         <th data-k="low">全站最低 <span class="arr"></span></th>
         <th data-k="med">中位价 <span class="arr"></span></th>
         <th data-k="nsum">样本数 <span class="arr"></span></th>
@@ -182,8 +182,8 @@ function renderRows(){
     <td class="srv">${r.server}</td>
     <td class="dd">${DD373[r.server]||"-"}</td>
     ${cellPlat(r,"mania","mania")}
-    ${cellPlat(r,"ibay","ibay")}
     ${cellPlat(r,"baro","baro")}
+    ${cellPlat(r,"ibay","ibay")}
     <td class="best">${fmt(r.low)}<span class="pill">${pn[r.lowPlat]}</span></td>
     <td>${fmt(r.med)}</td>
     <td>${fmt(r.nsum)}</td>
