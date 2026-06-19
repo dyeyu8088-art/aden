@@ -3,153 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>天堂经典 · 阿登/阿德纳 三平台行情看板</title>
+<title>天堂经典 · 阿登/阿데나 三平台行情看板</title>
 <style>
-  :root{--bg:#0f1115;--card:#1a1d24;--line:#2a2f3a;--txt:#e6e8ec;--mut:#8b93a1;--accent:#ffb020;--green:#35c46a;--red:#ff5d5d;--blue:#4ea1ff;}
+  :root{--bg:#0f1115;--card:#181b22;--line:#272b34;--txt:#e6e9ef;--mut:#9aa3b2;--accent:#ffb454;--green:#5ad17a;--blue:#5aa9ff;--purple:#b78bff;}
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic","Microsoft YaHei",sans-serif;font-size:14px;}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,"Segoe UI",Roboto,"Malgun Gothic","Microsoft YaHei",sans-serif;font-size:14px;}
   .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 60px;}
-  h1{font-size:22px;margin:0 0 4px;}
-  .sub{color:var(--mut);font-size:13px;margin-bottom:18px;}
-  .sub b{color:var(--accent);}
-  .controls{display:flex;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px;}
-  .ctl{display:flex;flex-direction:column;gap:4px;}
-  .ctl label{font-size:11px;color:var(--mut);}
-  .ctl input{width:110px;background:#0f1115;border:1px solid var(--line);color:var(--txt);border-radius:7px;padding:7px 9px;font-size:14px;}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-bottom:10px;}
-  .legend span{display:inline-flex;align-items:center;gap:5px;}
-  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  h1{font-size:20px;margin:0 0 4px;}
+  .sub{color:var(--mut);font-size:12px;margin-bottom:16px;}
+  .sub b{color:var(--txt);}
+  .controls{display:flex;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+  .ctrl{display:flex;flex-direction:column;gap:4px;}
+  .ctrl label{font-size:11px;color:var(--mut);}
+  .ctrl input{width:110px;background:#0f1115;border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:7px 9px;font-size:14px;}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-bottom:10px;align-items:center;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle;}
   .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;}
   table{border-collapse:collapse;width:100%;min-width:920px;}
-  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
-  th{background:#161922;color:var(--mut);font-weight:600;font-size:12px;position:sticky;top:0;cursor:pointer;user-select:none;}
-  th:first-child,td:first-child{text-align:center;}
-  td.srv{text-align:left;font-weight:600;}
-  tr:hover td{background:#1f232c;}
-  .best{color:var(--green);font-weight:700;}
-  .tag{font-size:10px;color:#0f1115;background:var(--accent);border-radius:5px;padding:1px 5px;margin-left:5px;vertical-align:middle;}
-  .tag.m{background:#ffb020;}.tag.b{background:#4ea1ff;}.tag.t{background:#35c46a;}
-  .muted{color:var(--mut);}
-  .profit{color:var(--green);}
-  .cap{color:var(--accent);font-weight:600;}
-  .foot{margin-top:14px;color:var(--mut);font-size:12px;line-height:1.7;}
+  th,td{padding:9px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line);}
+  th{position:sticky;top:0;background:#1d212a;color:var(--mut);font-weight:600;font-size:12px;cursor:pointer;}
+  th:nth-child(2),td:nth-child(2){text-align:left;}
+  tbody tr:hover{background:#1d212a;}
+  td.sv{font-weight:600;}
+  .min-mark{font-size:10px;padding:1px 5px;border-radius:6px;margin-left:6px;color:#0f1115;font-weight:700;}
+  .m-mania{background:var(--accent);}
+  .m-ibay{background:var(--blue);}
+  .m-baro{background:var(--purple);}
+  .lowcell{color:var(--green);font-weight:700;}
+  .buy{color:var(--accent);font-weight:700;}
   .na{color:#555;}
+  tfoot td{color:var(--mut);font-size:11px;text-align:left;padding-top:10px;}
+  .platsum{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0 14px;}
+  .pcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;flex:1;min-width:150px;}
+  .pcard .nm{font-size:12px;color:var(--mut);}
+  .pcard .vl{font-size:18px;font-weight:700;margin-top:3px;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>天堂经典 · 阿登/阿德纳 三平台行情看板</h1>
-  <div class="sub">数据时点 <b id="scraped"></b> · 按服务器分组取各平台最低卖价 · 仅供比价参考,不构成挂单/下单</div>
+  <h1>天堂经典 · 阿登/阿데나 三平台行情看板</h1>
+  <div class="sub">数据时点 <b id="ts"></b> · 单位：韩元/万阿덴(아데나) · 卖价取各区最低/中位/最高 · 仅供参考，绝不代表挂单/下单</div>
+
+  <div class="platsum" id="platsum"></div>
 
   <div class="controls">
-    <div class="ctl"><label>利润率 %</label><input id="in-profit" type="number" step="0.5" value="10"></div>
-    <div class="ctl"><label>平台费 %</label><input id="in-fee" type="number" step="0.5" value="5"></div>
-    <div class="ctl"><label>汇率 (KRW→CNY)</label><input id="in-rate" type="number" step="0.0001" value="0.0046"></div>
+    <div class="ctrl"><label>利润率 %</label><input id="profit" type="number" step="0.5" value="10"></div>
+    <div class="ctrl"><label>平台费 %</label><input id="fee" type="number" step="0.5" value="5"></div>
+    <div class="ctrl"><label>汇率 (1韩元=?元)</label><input id="rate" type="number" step="0.0001" value="0.0048"></div>
   </div>
 
   <div class="legend">
-    <span><i class="dot" style="background:#ffb020"></i>itemmania</span>
-    <span><i class="dot" style="background:#4ea1ff"></i>itembay</span>
-    <span><i class="dot" style="background:#35c46a"></i>barotem</span>
-    <span class="muted">价格单位:韩元/万阿德纳 · 收购上限单位:人民币/万</span>
+    <span><span class="dot" style="background:var(--accent)"></span>itemmania</span>
+    <span><span class="dot" style="background:var(--blue)"></span>itembay</span>
+    <span><span class="dot" style="background:var(--purple)"></span>barotem</span>
+    <span style="color:var(--green)">绿色＝全站最低卖价</span>
+    <span>点击表头可排序</span>
   </div>
 
   <div class="tbl-wrap">
     <table id="board">
       <thead><tr>
-        <th data-k="rank">#</th>
-        <th data-k="srv" style="text-align:left">服务器</th>
-        <th data-k="m">itemmania</th>
-        <th data-k="b">itembay</th>
-        <th data-k="t">barotem</th>
-        <th data-k="min">全站最低</th>
+        <th data-k="0">#</th>
+        <th data-k="sv">服务器</th>
+        <th data-k="mania">itemmania</th>
+        <th data-k="ibay">itembay</th>
+        <th data-k="baro">barotem</th>
+        <th data-k="low">全站最低</th>
         <th data-k="med">中位价</th>
         <th data-k="n">样本数</th>
-        <th data-k="cap">收购上限(元/万)</th>
-        <th data-k="pf">利润(韩元/万)</th>
+        <th data-k="buy">收购上限(元/万)</th>
+        <th data-k="pft">利润(韩元/万)</th>
       </tr></thead>
-      <tbody id="rows"></tbody>
+      <tbody></tbody>
     </table>
   </div>
-  <div class="foot" id="foot"></div>
+  <div class="sub" style="margin-top:12px">收购上限 = 全站最低 × (1 − 利润% − 平台%) × 汇率 ；利润 = 全站最低 × 利润%</div>
 </div>
 
 <script>
-/* ===== 数据常量(每次刷新仅替换以下 5 项) ===== */
-const SCRAPED = "2026-06-19 18:30 (KST)";
-const RATE_DEFAULT = 0.0046;
-const MANIA = [["아인하사드",621,720,730,32],["로엔그린",670,720,750,13],["아스테어",700,700,720,7],["마프르",800,880,900,3],["캐스톨",800,910,910,2],["아툰",800,840,860,3],["듀크데필",810,880,880,2],["어레인",880,1030,1380,3],["발센",880,940,970,4],["케레니스",880,910,1050,5],["데컨",880,900,2000,4],["파아그리오",890,930,1300,3],["가드리아",900,990,1280,3],["에바",940,1010,1020,4],["하이네",950,1010,1010,4],["린델",950,1000,1020,4],["세바스챤",960,960,960,1],["크리스터",980,980,1050,3],["사이하",980,1380,1380,2],["하딘",1020,1050,1350,5],["켄라우헬",1020,1180,1180,2],["군터",1040,1060,1070,3],["오웬",1050,1080,1170,5],["이실로테",1170,1300,1600,4],["조우",1180,1230,1330,4],["질리언",1420,1790,1790,2],["발라카스",1430,1542,4530,4],["데포로쥬",1540,1540,1640,3],["오렌",2690,2790,2790,2]];
-const IBAY = [["아인하사드",720,730,750,10],["로엔그린",730,750,1020,12],["아스테어",750,760,1180,9],["캐스톨",800,840,950,13],["아툰",810,850,860,10],["듀크데필",810,830,880,12],["마프르",820,870,880,10],["데컨",820,870,900,10],["발센",880,910,990,12],["어레인",880,1010,1110,12],["케레니스",880,920,940,11],["가드리아",900,930,1250,15],["파아그리오",910,930,940,11],["에바",940,980,1020,14],["세바스챤",950,970,990,9],["사이하",970,990,1020,10],["크리스터",980,1040,1070,12],["린델",1000,1000,1020,13],["하이네",1000,1010,1390,13],["하딘",1010,1030,1060,9],["켄라우헬",1020,1110,1200,12],["군터",1050,1070,1090,11],["오웬",1080,1100,1690,13],["조우",1143,1190,1800,14],["이실로테",1180,1240,1320,11],["발라카스",1410,1430,1500,10],["질리언",1420,1500,1600,8],["데포로쥬",1520,1650,2900,14],["오렌",2690,2730,2800,8]];
-const BARO = [["아인하사드",668,720,800,20],["로엔그린",680,750,1000,9],["아스테어",720,730,820,7],["데컨",790,820,870,9],["아툰",800,812,850,10],["듀크데필",801,820,870,13],["마프르",840,869,900,10],["캐스톨",840,870,930,12],["발센",849,900,990,12],["케레니스",870,900,1018,12],["가드리아",879,900,2490,13],["세바스챤",900,920,990,10],["에바",901,960,1000,11],["하딘",910,1000,1060,11],["파아그리오",910,920,930,8],["사이하",910,960,1010,13],["어레인",934,1000,1090,11],["린델",940,992,1030,16],["하이네",940,1020,1090,18],["크리스터",968,1010,1060,12],["군터",999,1050,1120,9],["켄라우헬",1090,1100,1500,11],["오웬",1100,1130,1150,14],["조우",1150,1220,1330,16],["이실로테",1180,1240,1500,15],["질리언",1290,1400,1600,11],["발라카스",1390,1400,1500,11],["데포로쥬",1500,1580,1700,13],["오렌",2638,2740,2800,10]];
-/* ===== 数据常量结束 ===== */
+// ===== 数据常量(自动刷新覆盖) =====
+const SCRAPED = "2026-06-19 18:37";
+const RATE_DEFAULT = 0.0048;
+const MANIA = [["아인하사드",621,720,1800,37],["로엔그린",678,720,760,10],["아스테어",700,720,2800,8],["아툰",790,840,860,4],["캐스톨",800,910,957,3],["듀크데필",810,880,2800,3],["케레니스",880,880,2800,5],["어레인",880,1030,1030,2],["발센",880,940,990,4],["데컨",880,890,2000,3],["마프르",880,880,880,1],["가드리아",900,930,2500,4],["파아그리오",930,2500,2500,2],["에바",940,1010,1020,3],["하이네",950,1060,2800,3],["세바스챤",960,990,990,2],["사이하",970,980,1900,3],["크리스터",980,980,1050,3],["린델",1020,1020,1020,1],["군터",1040,1060,1070,3],["켄라우헬",1050,1150,1180,4],["하딘",1050,1060,1060,2],["오웬",1080,1080,1195,4],["조우",1180,1180,1260,4],["이실로테",1180,1180,1310,3],["질리언",1270,1790,1790,2],["발라카스",1350,1480,4530,3],["데포로쥬",1540,1560,1570,4],["오렌",2650,2690,2790,3]];
+const IBAY = [["아인하사드",720,730,750,10],["로엔그린",730,750,1020,13],["아스테어",750,760,770,7],["캐스톨",800,900,950,14],["아툰",810,850,860,8],["듀크데필",810,830,880,11],["데컨",810,870,900,11],["마프르",820,870,880,10],["발센",880,910,990,11],["어레인",880,1010,1110,11],["케레니스",880,920,940,13],["가드리아",900,930,990,12],["파아그리오",910,930,940,10],["에바",940,950,1020,14],["세바스챤",950,970,990,9],["사이하",970,990,1020,9],["크리스터",980,1040,1070,12],["린델",1000,1000,1020,14],["하이네",1000,1010,1070,13],["하딘",1010,1060,1060,11],["군터",1040,1070,1090,9],["켄라우헬",1050,1110,1800,14],["오웬",1080,1080,1180,11],["조우",1143,1190,1800,16],["이실로테",1180,1240,1320,13],["질리언",1300,1470,1600,9],["발라카스",1410,1430,1500,11],["데포로쥬",1520,1540,2900,14],["오렌",2690,2710,2800,9]];
+const BARO = [["아인하사드",668,720,800,17],["아스테어",720,750,1300,10],["로엔그린",740,750,1000,7],["데컨",800,840,870,7],["아툰",800,810,850,8],["듀크데필",801,820,870,13],["캐스톨",820,870,930,10],["마프르",835,900,993,10],["발센",849,900,990,11],["케레니스",870,900,1018,13],["가드리아",879,940,2490,12],["파아그리오",897,920,930,8],["세바스챤",900,920,990,9],["에바",900,960,992,12],["사이하",909,960,1010,15],["어레인",934,1000,1090,9],["린델",939,1000,1030,14],["하이네",940,1020,1090,12],["크리스터",968,1010,1060,9],["하딘",980,1030,1060,9],["군터",999,1050,1120,8],["켄라우헬",1070,1100,1500,11],["오웬",1100,1130,1150,13],["조우",1150,1200,1330,16],["이실로테",1180,1220,1500,15],["질리언",1290,1400,1600,10],["발라카스",1389,1400,1500,10],["데포로쥬",1500,1570,1700,11],["오렌",2500,2740,2800,8]];
+// ===================================
 
-const fmt = n => n==null?"—":n.toLocaleString();
+const SERVERS_ZH = {"아인하사드":"阿因哈萨德","로엔그린":"罗恩格林","아스테어":"阿斯泰尔","아툰":"阿屯","캐스톨":"卡斯托尔","듀크데필":"杜克德菲","케레니스":"凯雷尼斯","어레인":"厄雷恩","발센":"瓦尔森","데컨":"德肯","마프르":"玛弗尔","가드리아":"加德里亚","파아그리오":"帕格里奥","에바":"艾娃","하이네":"海涅","세바스챤":"塞巴斯钱","사이하":"赛哈","크리스터":"克里斯特","린델":"林德","군터":"君特","켄라우헬":"肯劳赫","하딘":"哈丁","오웬":"欧文","조우":"乔武","이실로테":"伊实洛特","질리언":"齐利安","발라카스":"巴拉卡斯","데포로쥬":"德波罗쥬","오렌":"奥伦"};
+
 function toMap(arr){const m={};arr.forEach(r=>m[r[0]]=r);return m;}
-const mM=toMap(MANIA), bM=toMap(IBAY), tM=toMap(BARO);
-const servers=[...new Set([...MANIA,...IBAY,...BARO].map(r=>r[0]))];
-let sortKey="min", sortDir=1;
+const mMania=toMap(MANIA),mIbay=toMap(IBAY),mBaro=toMap(BARO);
+const allServers=[...new Set([...MANIA,...IBAY,...BARO].map(r=>r[0]))];
 
-function rowData(s){
-  const m=mM[s], b=bM[s], t=tM[s];
-  const mp=m?m[1]:null, bp=b?b[1]:null, tp=t?t[1]:null;
-  const cands=[["m",mp],["b",bp],["t",tp]].filter(x=>x[1]!=null);
-  cands.sort((a,c)=>a[1]-c[1]);
-  const best=cands[0]||[null,null];
-  const mins=cands.map(x=>x[1]).sort((a,c)=>a-c);
-  const med=mins.length?mins[Math.floor(mins.length/2)]:null;
-  const n=(m?m[4]:0)+(b?b[4]:0)+(t?t[4]:0);
-  return {srv:s,mp,bp,tp,min:best[1],plat:best[0],med,n};
-}
-let DATA=servers.map(rowData);
+document.getElementById('ts').textContent=SCRAPED;
+document.getElementById('rate').value=RATE_DEFAULT;
 
-function render(){
-  const profit=parseFloat(document.getElementById('in-profit').value)/100||0;
-  const fee=parseFloat(document.getElementById('in-fee').value)/100||0;
-  const rate=parseFloat(document.getElementById('in-rate').value)||RATE_DEFAULT;
-  const tagName={m:"itemmania",b:"itembay",t:"barotem"};
-  let d=[...DATA];
-  d.sort((a,c)=>{
-    let av=a[sortKey], cv=c[sortKey];
-    if(sortKey==="srv"){return a.srv.localeCompare(c.srv)*sortDir;}
-    if(av==null)av=Infinity; if(cv==null)cv=Infinity;
-    return (av-cv)*sortDir;
+function rows(){
+  return allServers.map(sv=>{
+    const a=mMania[sv],b=mIbay[sv],c=mBaro[sv];
+    const cands=[];
+    if(a)cands.push(['mania',a[1]]);
+    if(b)cands.push(['ibay',b[1]]);
+    if(c)cands.push(['baro',c[1]]);
+    let low=null,lowP=null;
+    cands.forEach(([p,v])=>{if(low===null||v<low){low=v;lowP=p;}});
+    const meds=[a&&a[2],b&&b[2],c&&c[2]].filter(x=>x!=null).sort((x,y)=>x-y);
+    const med=meds.length?meds[Math.floor(meds.length/2)]:null;
+    const n=(a?a[4]:0)+(b?b[4]:0)+(c?c[4]:0);
+    return {sv,mania:a?a[1]:null,ibay:b?b[1]:null,baro:c?c[1]:null,low,lowP,med,n};
   });
-  const rows=d.map((r,i)=>{
-    const cap = r.min!=null ? (r.min*(1-profit-fee)*rate) : null;
-    const pf  = r.min!=null ? (r.min*profit) : null;
-    const cell=(v,plat,key)=> v==null?'<td class="na">—</td>':
-      `<td class="${r.plat===key?'best':''}">${fmt(v)}</td>`;
+}
+
+function fmt(v){return v==null?'<span class="na">—</span>':v.toLocaleString();}
+const PMARK={mania:['m-mania','MANIA'],ibay:['m-ibay','IBAY'],baro:['m-baro','BARO']};
+
+let sortKey='low',sortDir=1;
+function render(){
+  const profit=+document.getElementById('profit').value/100;
+  const fee=+document.getElementById('fee').value/100;
+  const rate=+document.getElementById('rate').value;
+  let data=rows();
+  data.forEach(r=>{
+    r.buy=r.low!=null?r.low*(1-profit-fee)*rate:null;
+    r.pft=r.low!=null?r.low*profit:null;
+  });
+  data.sort((x,y)=>{
+    let xv=x[sortKey],yv=y[sortKey];
+    if(sortKey==='sv'){xv=x.sv;yv=y.sv;return sortDir*(''+xv).localeCompare(''+yv);}
+    if(xv==null)return 1;if(yv==null)return -1;
+    return sortDir*(xv-yv);
+  });
+  const tb=document.querySelector('#board tbody');
+  tb.innerHTML=data.map((r,i)=>{
+    const zh=SERVERS_ZH[r.sv]||'';
+    const pm=r.lowP?PMARK[r.lowP]:null;
+    const mark=pm?`<span class="min-mark ${pm[0]}">${pm[1]}</span>`:'';
     return `<tr>
       <td>${i+1}</td>
-      <td class="srv">${r.srv}</td>
-      ${cell(r.mp,'itemmania','m')}
-      ${cell(r.bp,'itembay','b')}
-      ${cell(r.tp,'barotem','t')}
-      <td class="best">${fmt(r.min)}${r.plat?`<span class="tag ${r.plat}">${tagName[r.plat]}</span>`:''}</td>
-      <td class="muted">${fmt(r.med)}</td>
-      <td class="muted">${r.n}</td>
-      <td class="cap">${cap==null?'—':cap.toFixed(2)}</td>
-      <td class="profit">${pf==null?'—':fmt(Math.round(pf))}</td>
+      <td class="sv">${r.sv}<span style="color:var(--mut);font-weight:400"> ${zh}</span></td>
+      <td>${fmt(r.mania)}</td>
+      <td>${fmt(r.ibay)}</td>
+      <td>${fmt(r.baro)}</td>
+      <td class="lowcell">${fmt(r.low)}${mark}</td>
+      <td>${fmt(r.med)}</td>
+      <td>${r.n}</td>
+      <td class="buy">${r.buy!=null?r.buy.toFixed(2):'<span class="na">—</span>'}</td>
+      <td>${r.pft!=null?Math.round(r.pft).toLocaleString():'<span class="na">—</span>'}</td>
     </tr>`;
-  }).join("");
-  document.getElementById('rows').innerHTML=rows;
-
-  const valid=DATA.filter(r=>r.min!=null);
-  const cheapest=[...valid].sort((a,c)=>a.min-c.min)[0];
-  document.getElementById('foot').innerHTML=
-    `覆盖服务器 <b>${valid.length}</b> 个 · 全站最低 <b style="color:var(--green)">${fmt(cheapest.min)}</b> 韩元/万(${cheapest.srv} · ${tagName[cheapest.plat]})`+
-    `<br>收购上限 = 全站最低 × (1 − 利润率 − 平台费) × 汇率 ; 利润 = 全站最低 × 利润率`+
-    `<br>公开看板:<a href="https://dyeyu8088-art.github.io/aden/" style="color:var(--blue)">https://dyeyu8088-art.github.io/aden/</a>`;
+  }).join('');
+  renderSummary(data);
 }
 
-document.getElementById('scraped').textContent=SCRAPED;
-['in-profit','in-fee','in-rate'].forEach(id=>document.getElementById(id).addEventListener('input',render));
-document.querySelectorAll('#board th').forEach(th=>th.addEventListener('click',()=>{
-  const k=th.dataset.k; if(k==="rank")return;
-  if(sortKey===k)sortDir*=-1; else{sortKey=k;sortDir=1;}
-  render();
-}));
-document.getElementById('in-rate').value=RATE_DEFAULT;
+function platLow(arr){return arr.length?Math.min(...arr.map(r=>r[1])):null;}
+function renderSummary(){
+  const items=[
+    ['itemmania',platLow(MANIA),MANIA.length,'var(--accent)'],
+    ['itembay',platLow(IBAY),IBAY.length,'var(--blue)'],
+    ['barotem',platLow(BARO),BARO.length,'var(--purple)']
+  ];
+  document.getElementById('platsum').innerHTML=items.map(([nm,lo,n,c])=>
+    `<div class="pcard"><div class="nm">${nm}</div><div class="vl" style="color:${c}">${lo!=null?lo.toLocaleString():'—'} <span style="font-size:12px;color:var(--mut)">韩元/万</span></div><div class="nm">覆盖 ${n} 区 · 全站最低</div></div>`
+  ).join('');
+}
+
+document.querySelectorAll('#board th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k=th.dataset.k;if(k==='0')return;
+    if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=k==='sv'?1:1;}
+    render();
+  });
+});
+['profit','fee','rate'].forEach(id=>document.getElementById(id).addEventListener('input',render));
 render();
 </script>
 </body>
