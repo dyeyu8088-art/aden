@@ -5,214 +5,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>天堂经典 · 阿登/阿德纳 三平台行情看板</title>
 <style>
-  :root{
-    --bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--border:#2a3140;
-    --text:#e6edf3;--muted:#8b949e;--accent:#3fb950;--accent2:#58a6ff;
-    --warn:#d29922;--bar:#1f6feb;--bar-bg:#21262d;--red:#ff7b72;
-  }
+  :root{--bg:#0f1216;--card:#181d24;--line:#262e38;--txt:#e7edf3;--mut:#8b97a6;--acc:#ffb020;--grn:#39d98a;--blu:#4aa8ff;--pur:#b18cff;}
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);
-    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",-apple-system,sans-serif;
-    -webkit-font-smoothing:antialiased;padding:20px;}
-  .wrap{max-width:1180px;margin:0 auto;}
-  h1{font-size:22px;margin:0 0 4px;font-weight:700;}
-  .sub{color:var(--muted);font-size:13px;margin-bottom:16px;}
-  .sub b{color:var(--accent2);}
-  .panel-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:16px;background:var(--panel);
-    border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;}
-  .ct{display:flex;align-items:center;gap:6px;color:var(--muted);}
-  .ct label{color:var(--text);}
-  .ct input{width:80px;background:var(--panel2);border:1px solid var(--border);color:var(--text);
-    border-radius:6px;padding:5px 8px;font-size:13px;text-align:right;}
-  .ct.hint{color:var(--muted);font-size:11px;}
-  .ct.hint b{color:var(--accent2);}
-  .cards{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;}
-  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
-  .card .label{color:var(--muted);font-size:12px;margin-bottom:6px;}
-  .card .val{font-size:18px;font-weight:700;}
-  .card .val.green{color:var(--accent);}
-  .card .val.blue{color:var(--accent2);}
-  table{width:100%;border-collapse:collapse;background:var(--panel);
-    border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:13px;}
-  thead th{background:var(--panel2);color:var(--muted);font-weight:600;
-    text-align:right;padding:10px 10px;cursor:pointer;user-select:none;white-space:nowrap;
-    border-bottom:1px solid var(--border);}
-  thead th:first-child,thead th:nth-child(2){text-align:left;}
-  thead th:hover{color:var(--text);}
-  thead th .arr{font-size:10px;opacity:.7;}
-  tbody td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;}
-  tbody td:first-child{color:var(--muted);text-align:left;}
-  tbody td.srv{text-align:left;font-weight:600;color:var(--text);}
-  tbody tr:hover{background:#1b2230;}
-  tbody tr:last-child td{border-bottom:none;}
-  .best{color:var(--accent);font-weight:700;}
-  .best::after{content:" ◆";font-size:9px;}
-  .plat-low{color:var(--accent);font-weight:700;}
-  .buy{color:var(--red);font-weight:700;}
-  .profit{color:var(--accent);font-weight:600;}
-  .na{color:#4b5563;}
-  .pill{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;margin-left:4px;
-    background:#21303f;color:var(--accent2);}
-  .note{margin-top:16px;color:var(--muted);font-size:12px;line-height:1.75;
-    background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
-  .note b{color:var(--text);}
-  .miss{margin-top:12px;color:var(--warn);font-size:12px;}
-  @media(max-width:880px){.cards{grid-template-columns:repeat(2,1fr);}}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:"Segoe UI","Malgun Gothic",system-ui,sans-serif;font-size:14px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 60px;}
+  h1{font-size:20px;margin:0 0 4px;}
+  .sub{color:var(--mut);font-size:13px;margin-bottom:16px;}
+  .sub b{color:var(--acc);}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;}
+  .fld{display:flex;flex-direction:column;gap:4px;}
+  .fld label{font-size:12px;color:var(--mut);}
+  .fld input{width:110px;background:#0f1216;border:1px solid var(--line);border-radius:7px;color:var(--txt);padding:7px 9px;font-size:14px;}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-left:auto;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  th,td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th{background:#11161c;color:var(--mut);font-weight:600;font-size:12px;cursor:pointer;position:sticky;top:0;}
+  th:nth-child(2),td:nth-child(2){text-align:left;}
+  th:first-child,td:first-child{text-align:center;color:var(--mut);}
+  tbody tr:hover{background:#1d242d;}
+  .srv{font-weight:600;}
+  .best{font-weight:700;color:var(--grn);}
+  .tag{font-size:11px;padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:middle;}
+  .t-m{background:rgba(255,176,32,.16);color:var(--acc);}
+  .t-b{background:rgba(74,168,255,.16);color:var(--blu);}
+  .t-r{background:rgba(177,140,255,.16);color:var(--pur);}
+  .cap{color:var(--grn);font-weight:600;}
+  .prof{color:var(--acc);}
+  .na{color:#4a5563;}
+  .foot{color:var(--mut);font-size:12px;margin-top:14px;line-height:1.7;}
+  @media(max-width:720px){.legend{margin-left:0;}th,td{padding:7px 5px;font-size:12px;}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>天堂经典 · 阿登/阿德纳 三平台行情看板</h1>
-  <div class="sub">游戏内金币(阿德纳)卖价对比 · 平台:<b>itemmania · itembay · barotem</b> · 韩国卖价单位:<b>韩元 / 1万个</b></div>
+  <div class="sub">数据时点 <b id="scraped"></b> · 抓取 itemmania / itembay / barotem 「리니지클래식 아데나」卖价,按服务器取各平台最低价比价。<b>仅供参考,只读不下单。</b></div>
 
-  <div class="panel-ctrl" id="ctrl">
-    <span class="ct"><label>我的利润</label><input id="p_profit" type="number" step="1" value="10"><b>%</b></span>
-    <span class="ct"><label>平台费</label><input id="p_plat" type="number" step="1" value="5"><b>%</b></span>
-    <span class="ct"><label>汇率 1韩元=</label><input id="p_rate" type="number" step="0.0001" value="0.0047"><b>元</b></span>
-    <span class="ct hint">收购上限(人民币)= 全站最低卖价 ×(1 − 利润% − 平台%)× 汇率 · 利润以<b>韩元</b>显示</span>
+  <div class="panel">
+    <div class="fld"><label>利润率 %</label><input id="inProfit" type="number" value="10" step="0.5"></div>
+    <div class="fld"><label>平台费 %</label><input id="inFee" type="number" value="5" step="0.5"></div>
+    <div class="fld"><label>汇率 (元/韩元)</label><input id="inRate" type="number" step="0.0001"></div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--acc)"></span>itemmania</span>
+      <span><span class="dot" style="background:var(--blu)"></span>itembay</span>
+      <span><span class="dot" style="background:var(--pur)"></span>barotem</span>
+    </div>
   </div>
-
-  <div class="cards" id="cards"></div>
 
   <table id="tbl">
-    <thead>
-      <tr>
-        <th data-k="rank">#</th>
-        <th data-k="server">服务器</th>
-        <th data-k="mania">itemmania <span class="arr"></span></th>
-        <th data-k="ibay">itembay <span class="arr"></span></th>
-        <th data-k="baro">barotem <span class="arr"></span></th>
-        <th data-k="low">全站最低 <span class="arr"></span></th>
-        <th data-k="med">中位价 <span class="arr"></span></th>
-        <th data-k="nsum">样本数 <span class="arr"></span></th>
-        <th data-k="buy">收购上限(元/万) <span class="arr"></span></th>
-        <th data-k="profit">利润(韩元/万) <span class="arr"></span></th>
-      </tr>
-    </thead>
-    <tbody id="rows"></tbody>
+    <thead><tr>
+      <th data-k="0">#</th>
+      <th data-k="srv">服务器</th>
+      <th data-k="m">itemmania</th>
+      <th data-k="b">itembay</th>
+      <th data-k="r">barotem</th>
+      <th data-k="min">全站最低</th>
+      <th data-k="med">中位价</th>
+      <th data-k="n">样本数</th>
+      <th data-k="cap">收购上限<br>(元/万)</th>
+      <th data-k="prof">利润<br>(韩元/万)</th>
+    </tr></thead>
+    <tbody id="body"></tbody>
   </table>
 
-  <div class="miss" id="miss"></div>
-
-  <div class="note">
-    <b>口径说明</b><br>
-    · 三个平台各自抓取「리니지클래식 아데나(阿德纳)」卖单,按服务器分组,取每区当前样本的<b>最低卖价</b>。<br>
-    · 「全站最低」= 三平台中最便宜的那个,后面标注来自哪个平台(◆ 绿色为该行最便宜平台)。<br>
-    · 「中位价」= 三平台各自最低价的中位数(反映该区普遍价位);「样本数」= 三平台合计抓到的报价条数,越多越可靠。<br>
-    · 「收购上限(元/万)」= 全站最低卖价 ×(1 − 我的利润% − 平台费%)× 汇率,即你在中国收币的最高出价(人民币),低于此价才有利可图。<br>
-    · 「利润(韩元/万)」= 全站最低卖价 × 我的利润%,因你在韩国结算,利润以韩元显示。利润/平台费/汇率可在上方调整,表格实时重算。<br>
-    · 仅统计单价 300~5000 韩元/万的正常报价;每平台单次仅取列表当前样本,价格仅供参考,实际成交以各平台页面为准。<br>
-    · 服务器名为韩服原名(专有名词),未翻译。本看板每 10 分钟自动刷新,需浏览器保持连接并登录三个平台。
-  </div>
+  <div class="foot" id="foot"></div>
 </div>
 
 <script>
-// ===== 由计划任务刷新的常量(每平台:[server,min,med,max,n]) =====
-const SCRAPED = "2026. 6. 19. 17:23";
-const RATE_DEFAULT = 0.0047;
-const MANIA = [["아인하사드",662,700,700,48],["로엔그린",670,680,780,4],["아스테어",750,780,780,2],["캐스톨",800,951,1120,4],["아툰",800,847,860,5],["듀크데필",810,870,880,3],["데컨",830,870,2000,4],["마프르",840,1088,1088,2],["어레인",880,1030,1030,2],["발센",880,950,970,4],["케레니스",880,1050,1300,4],["가드리아",900,910,940,3],["파아그리오",910,957,1190,4],["에바",940,960,1020,5],["세바스챤",960,960,960,1],["사이하",980,980,980,2],["린델",990,1000,1010,3],["켄라우헬",1020,1100,1169,4],["하딘",1030,1050,1050,2],["군터",1040,1070,1070,4],["크리스터",1050,1300,1300,2],["오웬",1050,1160,1611,5],["하이네",1060,1060,1060,1],["조우",1130,1165,1180,4],["이실로테",1170,1310,1310,2],["질리언",1220,1680,1790,3],["발라카스",1430,1430,1440,5],["데포로쥬",1540,1640,1640,2],["오렌",2690,2730,2800,4]];
-const IBAY = [["아인하사드",700,725,750,15],["로엔그린",730,765,1020,12],["아스테어",750,770,991,9],["아툰",780,840,860,11],["캐스톨",800,840,950,13],["듀크데필",810,870,1340,14],["마프르",820,850,870,9],["데컨",820,840,1250,11],["발센",880,910,990,12],["어레인",880,1010,1156,13],["케레니스",880,920,940,12],["가드리아",900,930,990,14],["파아그리오",910,930,940,9],["에바",930,970,1020,13],["사이하",940,970,1020,11],["세바스챤",950,950,990,9],["린델",990,1000,1030,13],["하이네",990,1010,1070,11],["하딘",1010,1030,1070,10],["켄라우헬",1020,1090,1200,13],["크리스터",1040,1060,1070,10],["조우",1050,1180,1800,18],["군터",1050,1060,1380,11],["오웬",1060,1080,1260,12],["이실로테",1240,1260,1320,11],["발라카스",1410,1460,1500,8],["질리언",1480,1500,1600,10],["데포로쥬",1520,1540,2900,13],["오렌",2690,2730,2800,8]];
-const BARO = [["로엔그린",652,750,1000,11],["아인하사드",675,750,800,17],["아스테어",730,750,920,8],["데컨",776,820,870,9],["마프르",790,810,880,12],["아툰",800,810,880,9],["듀크데필",810,830,870,12],["캐스톨",818,860,930,9],["파아그리오",840,920,930,10],["가드리아",880,907,2490,15],["에바",880,930,980,13],["케레니스",890,900,1018,12],["세바스챤",900,910,990,12],["발센",900,900,990,10],["사이하",910,970,1020,14],["어레인",930,960,1090,12],["린델",950,980,1030,14],["하이네",950,1020,1090,17],["크리스터",980,1010,1060,13],["하딘",980,1000,1060,11],["군터",999,1050,1120,9],["켄라우헬",1020,1100,1130,9],["오웬",1100,1130,1240,16],["조우",1150,1240,1316,14],["이실로테",1200,1240,1280,11],["질리언",1290,1430,1600,10],["발라카스",1390,1400,1500,11],["데포로쥬",1490,1570,1650,9],["오렌",2550,2670,2780,12]];
-// =================================================================
+/* ===== 5 个数据常量(由刷新任务更新) ===== */
+const SCRAPED = "2026. 06. 19. 오후 06:17";
+const RATE_DEFAULT = 0.0046;
+const MANIA = [["아인하사드",668,720,1150,32],["로엔그린",670,729,1500,14],["아스테어",700,718,820,9],["캐스톨",800,910,910,2],["아툰",800,860,890,4],["데컨",800,880,2000,5],["듀크데필",810,820,880,4],["발센",870,880,880,4],["케레니스",880,1000,2500,8],["어레인",880,880,1030,3],["마프르",880,880,880,1],["가드리아",900,900,990,3],["파아그리오",930,930,930,1],["에바",940,1020,1063,4],["린델",950,1000,1020,3],["세바스챤",960,1380,2500,3],["사이하",980,980,980,1],["크리스터",990,1050,2500,3],["하이네",1010,1060,1541,3],["켄라우헬",1020,1180,2500,3],["군터",1040,1060,1070,3],["오웬",1050,1100,1170,6],["하딘",1060,1070,1070,2],["조우",1180,1330,1350,3],["이실로테",1180,1310,1310,2],["질리언",1270,1790,1790,2],["발라카스",1350,1430,4530,5],["데포로쥬",1640,1640,1640,1],["오렌",2690,2790,2790,2]];
+const IBAY = [["아인하사드",720,730,1150,11],["로엔그린",730,750,1020,13],["아스테어",750,760,1080,10],["아툰",780,850,860,10],["캐스톨",800,900,1225,15],["듀크데필",810,830,880,12],["마프르",820,870,1250,10],["데컨",820,870,900,11],["발센",880,910,990,12],["어레인",880,1010,1110,13],["케레니스",880,920,940,11],["파아그리오",900,930,1180,13],["가드리아",900,910,990,13],["에바",940,980,1230,15],["세바스챤",950,970,990,9],["사이하",970,990,1380,10],["린델",1000,1000,1020,12],["하이네",1000,1010,1120,12],["하딘",1010,1030,1060,9],["켄라우헬",1020,1110,1200,11],["크리스터",1040,1040,1070,9],["군터",1050,1070,1380,11],["오웬",1080,1160,1180,12],["조우",1143,1180,1800,15],["이실로테",1180,1240,1320,11],["발라카스",1410,1480,1540,10],["질리언",1420,1500,1600,8],["데포로쥬",1520,1650,2900,12],["오렌",2690,2730,2800,8]];
+const BARO = [["로엔그린",649,750,1000,10],["아인하사드",668,730,800,15],["아스테어",720,730,820,7],["데컨",790,820,870,12],["아툰",800,825,880,10],["듀크데필",801,820,870,13],["마프르",810,840,880,10],["캐스톨",840,860,930,10],["발센",860,900,990,12],["케레니스",877,900,1018,15],["가드리아",879,900,2490,13],["세바스챤",900,920,990,10],["사이하",900,960,1020,15],["에바",901,960,980,10],["하딘",910,1000,1304,14],["파아그리오",910,920,970,9],["린델",930,980,1030,15],["어레인",934,1000,1090,10],["크리스터",980,1000,1060,12],["하이네",980,1020,1100,13],["군터",999,1050,1120,9],["켄라우헬",1090,1100,1500,11],["오웬",1100,1130,1150,17],["조우",1148,1220,1330,18],["이실로테",1180,1240,1500,15],["질리언",1290,1430,1600,12],["발라카스",1350,1400,1500,11],["데포로쥬",1490,1570,1700,14],["오렌",2500,2670,2800,10]];
 
-const ALL=["데포로쥬","켄라우헬","질리언","이실로테","조우","하딘","케레니스","오웬","크리스터","아인하사드","아툰","가드리아","군터","아스테어","듀크데필","발센","어레인","캐스톨","세바스챤","데컨","파아그리오","에바","사이하","마프르","린델","하이네","로엔그린","발라카스","오렌"];
-const fmt = n => (n==null?"-":Number(n).toLocaleString("zh-CN"));
-const toMap = arr => Object.fromEntries(arr.map(r=>[r[0],{min:r[1],med:r[2],max:r[3],n:r[4]}]));
-const mM=toMap(MANIA), mI=toMap(IBAY), mB=toMap(BARO);
-const median = a => {const x=[...a].sort((p,q)=>p-q);const k=Math.floor(x.length/2);return x.length%2?x[k]:Math.round((x[k-1]+x[k])/2);};
+/* ===== 渲染逻辑 ===== */
+const SERVER_ORDER=["데포로쥬","켄라우헬","질리언","이실로테","조우","하딘","케레니스","오웬","크리스터","아인하사드","아툰","가드리아","군터","아스테어","듀크데필","발센","어레인","캐스톨","세바스챤","데컨","파아그리오","에바","사이하","마프르","린델","하이네","로엔그린","발라카스","오렌"];
+const mapOf=a=>{const m={};a.forEach(r=>m[r[0]]=r);return m;};
+const M=mapOf(MANIA),B=mapOf(IBAY),R=mapOf(BARO);
+const median=arr=>{const x=[...arr].sort((p,q)=>p-q);const n=x.length;return n?(n%2?x[(n-1)/2]:Math.round((x[n/2-1]+x[n/2])/2)):null;};
+const fmt=v=>v==null?'<span class="na">—</span>':v.toLocaleString();
 
-const rows = ALL.map(s=>{
-  const a=mM[s], b=mI[s], c=mB[s];
-  const cand=[["mania",a&&a.min],["ibay",b&&b.min],["baro",c&&c.min]].filter(x=>x[1]);
-  let low=null, lowPlat=null;
-  cand.forEach(x=>{if(low==null||x[1]<low){low=x[1];lowPlat=x[0];}});
-  const med = cand.length?median(cand.map(x=>x[1])):null;
-  const nsum = (a?a.n:0)+(b?b.n:0)+(c?c.n:0);
-  return {server:s, mania:a&&a.min, ibay:b&&b.min, baro:c&&c.min, low, lowPlat, med, nsum};
-}).filter(r=>r.low!=null);
+let rows=SERVER_ORDER.map(s=>{
+  const m=M[s],b=B[s],r=R[s];
+  const mins=[];if(m)mins.push(['m',m[1]]);if(b)mins.push(['b',b[1]]);if(r)mins.push(['r',r[1]]);
+  if(!mins.length)return null;
+  mins.sort((x,y)=>x[1]-y[1]);
+  const best=mins[0];
+  const meds=[];if(m)meds.push(m[2]);if(b)meds.push(b[2]);if(r)meds.push(r[2]);
+  const n=(m?m[4]:0)+(b?b[4]:0)+(r?r[4]:0);
+  return {srv:s,m:m?m[1]:null,b:b?b[1]:null,r:r?r[1]:null,min:best[1],plat:best[0],med:median(meds),n};
+}).filter(Boolean);
 
-function params(){
-  const pf=parseFloat(document.getElementById("p_profit").value)||0;
-  const pl=parseFloat(document.getElementById("p_plat").value)||0;
-  const rt=parseFloat(document.getElementById("p_rate").value)||0;
-  return {pf,pl,rt};
-}
-function compute(){
-  const {pf,pl,rt}=params();
-  rows.forEach(r=>{r.buy=r.low*(1-(pf+pl)/100)*rt; r.profit=r.low*pf/100;});
-}
+let sortK='min',sortAsc=true;
 
-function renderCards(){
-  const lows=rows.map(r=>r.low);
-  const siteLow=Math.min(...lows);
-  const avgLow=Math.round(lows.reduce((a,b)=>a+b,0)/lows.length);
-  const platCount={mania:0,ibay:0,baro:0};
-  rows.forEach(r=>platCount[r.lowPlat]++);
-  const winner=Object.entries(platCount).sort((a,b)=>b[1]-a[1])[0];
-  const wname={mania:"itemmania",ibay:"itembay",baro:"barotem"}[winner[0]];
-  const c=[
-    ["数据时点", SCRAPED||"-",""],
-    ["覆盖服务器", rows.length+" 区",""],
-    ["三平台全站最低", fmt(siteLow)+" 韩元","green"],
-    ["各服最低均值", fmt(avgLow)+" 韩元","blue"],
-    ["最便宜平台(占多数)", wname+"("+winner[1]+"区)",""],
-  ];
-  document.getElementById("cards").innerHTML=c.map(x=>`<div class="card"><div class="label">${x[0]}</div><div class="val ${x[2]}">${x[1]}</div></div>`).join("");
-}
-
-let sortKey="low", sortAsc=true;
-function cellPlat(r,plat,key){
-  const v=r[key];
-  if(v==null)return `<td class="na">-</td>`;
-  const cls=(r.lowPlat===plat)?"plat-low":"";
-  return `<td class="${cls}">${fmt(v)}</td>`;
-}
-function renderRows(){
-  const body=document.getElementById("rows");
-  const pn={mania:"itemmania",ibay:"itembay",baro:"barotem"};
-  const sorted=[...rows].sort((a,b)=>{
-    let va=a[sortKey],vb=b[sortKey];
-    if(sortKey==="server")return sortAsc?a.server.localeCompare(b.server):b.server.localeCompare(a.server);
-    if(va==null)va=Infinity; if(vb==null)vb=Infinity;
-    return sortAsc?va-vb:vb-va;
+function render(){
+  const profit=(+document.getElementById('inProfit').value||0)/100;
+  const fee=(+document.getElementById('inFee').value||0)/100;
+  const rate=+document.getElementById('inRate').value||RATE_DEFAULT;
+  const TAG={m:'t-m',b:'t-b',r:'t-r'},NM={m:'mania',b:'bay',r:'baro'};
+  let data=rows.map(o=>({...o,cap:o.min*(1-profit-fee)*rate,prof:o.min*profit}));
+  data.sort((a,b)=>{let x=a[sortK],y=b[sortK];if(sortK==='srv'){return sortAsc?(''+x).localeCompare(y):(''+y).localeCompare(x);}return sortAsc?x-y:y-x;});
+  const body=document.getElementById('body');body.innerHTML='';
+  data.forEach((o,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td>`
+      +`<td class="srv">${o.srv}</td>`
+      +`<td>${fmt(o.m)}</td><td>${fmt(o.b)}</td><td>${fmt(o.r)}</td>`
+      +`<td class="best">${o.min.toLocaleString()}<span class="tag ${TAG[o.plat]}">${NM[o.plat]}</span></td>`
+      +`<td>${fmt(o.med)}</td><td>${o.n}</td>`
+      +`<td class="cap">${o.cap.toFixed(3)}</td>`
+      +`<td class="prof">${Math.round(o.prof).toLocaleString()}</td>`;
+    body.appendChild(tr);
   });
-  body.innerHTML=sorted.map((r,i)=>`<tr>
-    <td>${i+1}</td>
-    <td class="srv">${r.server}</td>
-    ${cellPlat(r,"mania","mania")}
-    ${cellPlat(r,"ibay","ibay")}
-    ${cellPlat(r,"baro","baro")}
-    <td class="best">${fmt(r.low)}<span class="pill">${pn[r.lowPlat]}</span></td>
-    <td>${fmt(r.med)}</td>
-    <td>${fmt(r.nsum)}</td>
-    <td class="buy">¥${r.buy.toFixed(2)}</td>
-    <td class="profit">${fmt(Math.round(r.profit))} 원</td>
-  </tr>`).join("");
-}
-function renderMiss(){
-  const miss=ALL.filter(s=>!rows.find(r=>r.server===s));
-  document.getElementById("miss").textContent = miss.length?("未覆盖服务器("+miss.length+"):"+miss.join("、")):"";
+  const gm=Math.min(...rows.filter(o=>o.m!=null).map(o=>o.m));
+  const gb=Math.min(...rows.filter(o=>o.b!=null).map(o=>o.b));
+  const gr=Math.min(...rows.filter(o=>o.r!=null).map(o=>o.r));
+  const ov=Math.min(gm,gb,gr);
+  const cheap=ov===gr?'barotem':ov===gm?'itemmania':'itembay';
+  document.getElementById('foot').innerHTML=
+    `三平台全站最低:itemmania <b>${gm}</b> · itembay <b>${gb}</b> · barotem <b>${gr}</b> 원/만 &nbsp;|&nbsp; 最便宜平台:<b>${cheap}</b> &nbsp;|&nbsp; 覆盖 ${rows.length} 区<br>`
+    +`收购上限 = 全站最低 ×(1 − 利润率 − 平台费)× 汇率;利润 = 全站最低 × 利润率。价格单位:韩元/万阿登。`;
 }
 
-document.querySelectorAll("thead th[data-k]").forEach(th=>{
-  th.addEventListener("click",()=>{
-    const k=th.dataset.k; if(k==="rank")return;
-    if(sortKey===k)sortAsc=!sortAsc; else {sortKey=k;sortAsc=true;}
-    document.querySelectorAll("thead th .arr").forEach(a=>a.textContent="");
-    const arr=th.querySelector(".arr"); if(arr)arr.textContent=sortAsc?"▲":"▼";
-    renderRows();
-  });
-});
-["p_profit","p_plat","p_rate"].forEach(id=>{
-  document.getElementById(id).addEventListener("input",()=>{compute();renderCards();renderRows();});
-});
-
-if(RATE_DEFAULT) document.getElementById("p_rate").value = RATE_DEFAULT;
-
-compute();
-renderCards();
-renderRows();
-renderMiss();
+document.getElementById('scraped').textContent=SCRAPED;
+document.getElementById('inRate').value=RATE_DEFAULT;
+['inProfit','inFee','inRate'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+document.querySelectorAll('#tbl th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;if(k==='0')return;if(sortK===k)sortAsc=!sortAsc;else{sortK=k;sortAsc=true;}render();}));
+render();
 </script>
 </body>
 </html>
